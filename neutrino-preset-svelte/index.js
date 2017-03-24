@@ -7,41 +7,54 @@ var svelte = require('neutrino-middleware-svelte-loader')
 
 module.exports = function (neutrino) {
 	var config = neutrino.config
-	var NODE_MODULES = path.join(process.cwd(), 'node_modules')
+	var NODE_MODULES = path.join(__dirname, 'node_modules')
+	var PROJECT_NODE_MODULES = path.join(process.cwd(), 'node_modules')
 
 	neutrino.use(web)
-	neutrino.use(svelte)
+	//clear 'html' rule to cancel an html loader
+	config.module.rule('html').uses.clear()
+	neutrino.use(svelte, {
+		include: [
+			neutrino.options.source,
+			neutrino.options.tests
+		]
+	})
 
 	// config.module.rule('style')
 	// 	.uses.clear()
 
 	// config.module.rule('style')
 
-	config.module.rule('compile')
-		.test(/\.(js)$/)
-		.include
-			.add(neutrino.options.source)
-			.add(neutrino.options.tests)
-			.end()
-		.exclude
-			.add(NODE_MODULES)
-			.end()
-		.use('babel')
-			.loader(require.resolve('babel-loader'))
-			.options({
-				presets: [
-					[
-						require.resolve('babel-preset-es2015'), { modules: false }
-					]
-				],
-				plugins: [
-					require.resolve('babel-plugin-transform-object-rest-spread'),
-					require.resolve('babel-plugin-transform-class-properties')
-				]
-			})
-			.end()
+	// config.module.rule('compile')
+	// 	.test(/\.(js)$/)
+	// 	.include
+	// 	.add(neutrino.options.source)
+	// 	.add(neutrino.options.tests)
+	// 	.end()
+	// 	.exclude
+	// 	// .add(NODE_MODULES)
+	// 	// .add(PROJECT_NODE_MODULES)
+	// 	.end()
+	// 	.use('babel')
+	// 	.loader(require.resolve('babel-loader'))
+	// 	.options({
+	// 		presets: [
+	// 			[
+	// 				require.resolve('babel-preset-es2015'), { modules: false }
+	// 			]
+	// 		],
+	// 		plugins: [
+	// 			require.resolve('babel-plugin-transform-object-rest-spread'),
+	// 			require.resolve('babel-plugin-transform-class-properties')
+	// 		]
+	// 	})
+	// 	.end()
 
-	config.resolve.extensions.add('.js')
+	//config.resolve.extensions.add('.js').add('.json')
+	config.resolve.modules.add(NODE_MODULES).add(PROJECT_NODE_MODULES)//.add('node_modules').add(neutrino.options.node_modules)
+	config.resolveLoader.modules.add(NODE_MODULES).add(PROJECT_NODE_MODULES)//.add(neutrino.options.node_modules)
+
+	// console.log(config.toConfig().module.rules[config.toConfig().module.rules.length-1])
 
 	// neutrino.use(loaderMerge('compile', 'babel'), {
 	// 	presets: [
@@ -58,10 +71,10 @@ module.exports = function (neutrino) {
 	// 	}
 	// })
 
-	// console.log(config.toConfig().module.rules[config.toConfig().module.rules.length-1])
-
-	config.resolve.modules.add(NODE_MODULES)
 	
+
+	
+
 	if (process.env.NODE_ENV === 'development') {
 		// config
 		// 	.entry('index')

@@ -1,6 +1,6 @@
 {
 	"name": "neutrino-preset-svelte",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Neutrino preset for Svelte applications",
 	"main": "index.js",
 	"author": "Constantine Genchevsky <const.gen@gmail.com>",
@@ -12,10 +12,12 @@
 	"keywords": [
 		"neutrino",
 		"preset",
-		"svelte"
+		"svelte",
+		"neutrino-preset",
+		"webpack"
 	],
 	"dependencies": {
-		"neutrino-middleware-svelte-loader": "*",
+		"neutrino-middleware-svelte-loader": "~1.0.0",
 		"neutrino-middleware-loader-merge": "~5.0.0-beta.1",
 		"neutrino-preset-web": "~5.0.0-beta.1",
 		"babel-preset-es2015": "^6.24.0",
