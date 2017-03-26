@@ -43,5 +43,14 @@
 	},
 	"peerDependencies": {
 		"neutrino": "^5.0.0"
+	},
+	"files": [
+		"*.js",
+		"README.md",
+		"package.json"
+	],
+	"engines": {
+		"node": ">=6.9.0",
+		"npm": ">=3.0.0"
 	}
 }

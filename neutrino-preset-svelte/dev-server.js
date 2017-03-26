@@ -7,7 +7,7 @@ module.exports = function (neutrino) {
 	neutrino.use(hot)
 
 	let config = neutrino.config
-	let server = ramda.pathOr({}, ['options', 'config', 'server'], neutrino)
+	let server = ramda.pathOr({}, ['options', 'server'], neutrino)
 	let protocol = process.env.HTTPS ? 'https' : 'http'
 	let host = process.env.HOST || server.host || '0.0.0.0'
 	let port = process.env.PORT || server.host || 5000

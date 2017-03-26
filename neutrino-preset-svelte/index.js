@@ -14,18 +14,10 @@ let env = require('neutrino-middleware-env')
 let htmlTemplate = require('neutrino-middleware-html-template')
 let namedModules = require('neutrino-middleware-named-modules')
 let devServer = require('./dev-server.js')
-let compiler = require('./compiler.js')
+let babel = require('./babel.js')
 
 module.exports = function (neutrino) {
 	neutrino.use(env)
-	neutrino.use(svelte, {include: [neutrino.options.source, neutrino.options.tests]})
-	neutrino.use(compiler, {include: [neutrino.options.source, neutrino.options.tests]})
-	
-	neutrino.use(styleLoader)
-	neutrino.use(fontLoader)
-	neutrino.use(imageLoader)
-	neutrino.use(htmlTemplate, neutrino.options.html)
-	neutrino.use(namedModules)
 
 	const NODE_MODULES = path.join(__dirname, 'node_modules')
 	const PROJECT_NODE_MODULES = path.join(process.cwd(), 'node_modules')
@@ -34,6 +26,15 @@ module.exports = function (neutrino) {
 	let devRun = (process.env.NODE_ENV === 'development')
 	let lintRule = config.module.rules.get('lint')
 
+	config.devtool(devRun ? 'eval-source-map' : 'source-map')
+	
+	neutrino.use(babel, {include: [neutrino.options.source, neutrino.options.tests]})
+	neutrino.use(svelte, {include: [neutrino.options.source, neutrino.options.tests]})
+	neutrino.use(styleLoader)
+	neutrino.use(fontLoader)
+	neutrino.use(imageLoader)
+	neutrino.use(namedModules)
+	neutrino.use(htmlTemplate, neutrino.options.html)
 	if (!testRun) {
 		neutrino.use(chunk)
 	}
@@ -67,11 +68,9 @@ module.exports = function (neutrino) {
 		.set('tls', 'empty');
 
 	if (devRun) {
-		config.devtool('eval-source-map')
 		neutrino.use(devServer)
 	} 
 	else {
-		config.devtool('source-map')
 		neutrino.use(clean, { paths: [neutrino.options.output] })
 		neutrino.use(minify)
 		config.output.filename('[name].[chunkhash].bundle.js')
