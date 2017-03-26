@@ -1,6 +1,6 @@
 {
 	"name": "neutrino-preset-svelte",
-	"version": "0.2.0",
+	"version": "1.0.0",
 	"description": "Neutrino preset for Svelte applications",
 	"main": "index.js",
 	"author": "Constantine Genchevsky <const.gen@gmail.com>",
@@ -9,6 +9,7 @@
 		"type": "git",
 		"url": "https://github.com/constgen/neutrino-presets.git"
 	},
+	"homepage": "https://github.com/constgen/neutrino-presets/tree/master/neutrino-preset-svelte",
 	"keywords": [
 		"neutrino",
 		"preset",
@@ -18,11 +19,27 @@
 	],
 	"dependencies": {
 		"neutrino-middleware-svelte-loader": "~1.0.0",
-		"neutrino-middleware-loader-merge": "~5.0.0-beta.1",
-		"neutrino-preset-web": "~5.0.0-beta.1",
-		"babel-preset-es2015": "^6.24.0",
-		"babel-plugin-transform-object-rest-spread": "^6.23.0",
-		"babel-plugin-transform-class-properties": "^6.23.0"
+		"neutrino-middleware-loader-merge": "~5.0.0",
+		"neutrino-middleware-chunk": "~5.0.0",
+		"neutrino-middleware-clean":"~5.0.0",
+		"neutrino-middleware-minify": "~5.0.0",
+		"neutrino-middleware-copy": "~5.0.0",
+		"neutrino-middleware-style-loader": "~5.0.0",
+		"neutrino-middleware-font-loader": "~5.0.0",
+		"neutrino-middleware-image-loader": "~5.0.0",
+		"neutrino-middleware-env": "~5.0.0",
+		"neutrino-middleware-html-template": "~5.0.0",
+		"neutrino-middleware-named-modules": "~5.0.0",
+		"neutrino-middleware-hot": "~5.0.0",
+		"babel-polyfill": "~6.23.0",
+		"ramda": "~0.23.0",
+		"eslint-plugin-html": "~2.0.0",
+		"babel-loader": "~6.4.1",
+		"babel-preset-env": "~1.2.2",
+		"babel-preset-es2015": "~6.24.0",
+		"babel-plugin-syntax-dynamic-import": "~6.18.0",
+		"babel-plugin-transform-object-rest-spread": "~6.23.0",
+		"babel-plugin-transform-class-properties": "~6.23.0"
 	},
 	"peerDependencies": {
 		"neutrino": "^5.0.0"
