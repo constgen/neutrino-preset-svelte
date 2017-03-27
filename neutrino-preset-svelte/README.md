@@ -8,7 +8,7 @@
 ## Features
 
 - Zero upfront configuration necessary to start developing and building a Svelte web app
-- Modern Babel compilation supporting ES modules, last 2 major browser versions, async functions, and dynamic imports, ES class properties, rest spread operators
+- Modern Babel compilation supporting ES modules, last several major browser versions, async functions, dynamic imports, ES class properties, rest spread operators and automatic polyfills bound to platforms
 - Webpack loaders for importing HTML Svelte components, CSS, images, icons, and fonts
 - Inheritense of Eslint rules for Svelte components `<script>` tags linting
 - Webpack Dev Server during development on "localhost" and local network IP for external devices access
@@ -276,7 +276,7 @@ module.exports = function (neutrino) {
 
 #### Compile targets
 
-This preset uses `babel-preset-env` which by default uses compatibility with 2 latest versions of every browser. This can be redefined for custom platforms.
+This preset uses `babel-preset-env` which by default uses compatibility with 3-4 latest versions of different browser. This can be redefined for custom platforms.
 
 *Esample: change supported browsers to automatically bundle necessary polyfills for them:*
 
@@ -287,20 +287,17 @@ This preset uses `babel-preset-env` which by default uses compatibility with 2 l
     "options": {
       "compile": {
         "targets": {
-          "browsers": [
-            "last 2 Chrome versions",
-            "last 2 Firefox versions",
-            "last 2 Edge versions",
-            "last 2 Opera versions",
-            "last 2 Safari versions",
-            "last 2 iOS versions"
-          ]
-        }
+          "browsers": ["last 2 versions", "ie 9"]
+        },
+		  "include": ["transform-es2015-arrow-functions", "es6.map"],
+		  "exclude": ["transform-regenerator", "es6.set"]
       }
     }
   }
 }
 ```
+
+This is an example with [browserlist](https://github.com/ai/browserslist) config. Full scope of configurations can be found in [babel-preset-env](https://github.com/babel/babel-preset-env/blob/master/README.md)
 
 
 

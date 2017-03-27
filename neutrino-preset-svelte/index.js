@@ -27,8 +27,23 @@ module.exports = function (neutrino) {
 	let lintRule = config.module.rules.get('lint')
 
 	config.devtool(devRun ? 'eval-source-map' : 'source-map')
-	
-	neutrino.use(babel, {include: [neutrino.options.source, neutrino.options.tests]})
+	config
+		.target('web')
+		.context(neutrino.options.root)
+		.entry('polyfill')
+		 	.add(require.resolve('./polyfills.js'))
+		 	.end()
+		.entry('index')
+			//.add(require.resolve('babel-polyfill'))
+			.add(neutrino.options.entry)
+			.end()
+	config.output
+		.path(neutrino.options.output)
+		.publicPath('./')
+		.filename('[name].bundle.js')
+		.chunkFilename('[id].[chunkhash].js')
+
+	neutrino.use(babel, {include: [neutrino.options.source, neutrino.options.tests, require.resolve('./polyfills.js')]})
 	neutrino.use(svelte, {include: [neutrino.options.source, neutrino.options.tests]})
 	neutrino.use(styleLoader)
 	neutrino.use(fontLoader)
@@ -38,19 +53,6 @@ module.exports = function (neutrino) {
 	if (!testRun) {
 		neutrino.use(chunk)
 	}
-
-	config
-		.target('web')
-		.context(neutrino.options.root)
-		.entry('index')
-			.add(require.resolve('babel-polyfill'))
-			.add(neutrino.options.entry);
-
-	config.output
-		.path(neutrino.options.output)
-		.publicPath('./')
-		.filename('[name].bundle.js')
-		.chunkFilename('[id].[chunkhash].js');
 
 	config.resolve.extensions.add('.js').add('.json')
 	config.resolve.modules.add('node_modules').add(NODE_MODULES).add(PROJECT_NODE_MODULES).add(neutrino.options.node_modules)
@@ -87,8 +89,6 @@ module.exports = function (neutrino) {
 				.pre()
 				.test(ruleExtensions)
 			neutrino.use(loaderMerge('lint', 'eslint'), {
-				globals: ['Buffer'],
-				envs: ['browser', 'commonjs'],
 				plugins: ['html'],
 				settings: {
 					'html/html-extensions': ['.svelte', '.html', '.htm']
@@ -98,6 +98,10 @@ module.exports = function (neutrino) {
 						experimentalObjectRestSpread: true
 					}
 				}
+			})
+			neutrino.use(loaderMerge('lint', 'eslint'), {
+				globals: ['Buffer'],
+				envs: ['browser', 'commonjs']
 			})
 		}
 	}
