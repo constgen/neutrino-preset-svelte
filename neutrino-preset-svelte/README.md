@@ -44,7 +44,7 @@ import Main from './main.html'
 import './main.css'
 
 new Main({
-	target: document.querySelector('#root')
+  target: document.querySelector('#root')
 })
 ```
 
@@ -289,8 +289,8 @@ This preset uses `babel-preset-env` which by default uses compatibility with 3-4
         "targets": {
           "browsers": ["last 2 versions", "ie 9"]
         },
-		  "include": ["transform-es2015-arrow-functions", "es6.map"],
-		  "exclude": ["transform-regenerator", "es6.set"]
+        "include": ["transform-es2015-arrow-functions", "es6.map"],
+        "exclude": ["transform-regenerator", "es6.set"]
       }
     }
   }
