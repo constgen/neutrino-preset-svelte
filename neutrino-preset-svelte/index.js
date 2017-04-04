@@ -15,6 +15,7 @@ let htmlTemplate = require('neutrino-middleware-html-template')
 let namedModules = require('neutrino-middleware-named-modules')
 let devServer = require('./dev-server.js')
 let babel = require('./babel.js')
+let merge = require('merge')
 
 module.exports = function (neutrino) {
 	neutrino.use(env)
@@ -25,26 +26,58 @@ module.exports = function (neutrino) {
 	let testRun = (process.env.NODE_ENV === 'test')
 	let devRun = (process.env.NODE_ENV === 'development')
 	let lintRule = config.module.rules.get('lint')
+	let eslintLoader = lintRule && lintRule.uses.get('eslint')
+	let styleRule = config.module.rules.get('style')
 
-	config.devtool(devRun ? 'eval-source-map' : 'source-map')
 	config
+		.devtool(devRun ? 'eval-source-map' : 'source-map')
 		.target('web')
 		.context(neutrino.options.root)
 		.entry('polyfill')
 		 	.add(require.resolve('./polyfills.js'))
 		 	.end()
 		.entry('index')
-			//.add(require.resolve('babel-polyfill'))
 			.add(neutrino.options.entry)
 			.end()
-	config.output
-		.path(neutrino.options.output)
-		.publicPath('./')
-		.filename('[name].bundle.js')
-		.chunkFilename('[id].[chunkhash].js')
+		.output
+			.path(neutrino.options.output)
+			.publicPath('./')
+			.filename('[name].bundle.js')
+			.chunkFilename('[id].[chunkhash].js')
+			.end()
+		.resolve.extensions
+			.add('.js')
+			.add('.json')
+			.end().end()
+		.resolve.modules
+			.add('node_modules')
+			.add(NODE_MODULES)
+			.add(PROJECT_NODE_MODULES)
+			.add(neutrino.options.node_modules)
+			.end().end()
+		.resolveLoader.modules
+			.add(NODE_MODULES)
+			.add(PROJECT_NODE_MODULES)
+			.add(neutrino.options.node_modules)
+			.end().end()
+		.node
+			.set('console', false)
+			.set('global', true)
+			.set('process', true)
+			.set('Buffer', true)
+			.set('__filename', 'mock')
+			.set('__dirname', 'mock')
+			.set('setImmediate', true)
+			.set('fs', 'empty')
+			.set('tls', 'empty')
+			.end()
 
-	neutrino.use(babel, {include: [neutrino.options.source, neutrino.options.tests, require.resolve('./polyfills.js')]})
-	neutrino.use(svelte, {include: [neutrino.options.source, neutrino.options.tests]})
+	neutrino.use(babel, {
+		include: [neutrino.options.source, neutrino.options.tests, require.resolve('./polyfills.js')]
+	})
+	neutrino.use(svelte, {
+		include: [neutrino.options.source, neutrino.options.tests]
+	})
 	neutrino.use(styleLoader)
 	neutrino.use(fontLoader)
 	neutrino.use(imageLoader)
@@ -53,22 +86,6 @@ module.exports = function (neutrino) {
 	if (!testRun) {
 		neutrino.use(chunk)
 	}
-
-	config.resolve.extensions.add('.js').add('.json')
-	config.resolve.modules.add('node_modules').add(NODE_MODULES).add(PROJECT_NODE_MODULES).add(neutrino.options.node_modules)
-	config.resolveLoader.modules.add(NODE_MODULES).add(PROJECT_NODE_MODULES).add(neutrino.options.node_modules)
-
-	config.node
-		.set('console', false)
-		.set('global', true)
-		.set('process', true)
-		.set('Buffer', true)
-		.set('__filename', 'mock')
-		.set('__dirname', 'mock')
-		.set('setImmediate', true)
-		.set('fs', 'empty')
-		.set('tls', 'empty');
-
 	if (devRun) {
 		neutrino.use(devServer)
 	} 
@@ -78,32 +95,22 @@ module.exports = function (neutrino) {
 		config.output.filename('[name].[chunkhash].bundle.js')
 	}
 
-	if (lintRule) {
-		if (lintRule.uses.get('eslint')) {
-			let lintRuleExtensions = lintRule.get('test')
-			let svelteRuleExtensions = [config.module.rule('svelte').get('test')]
-			lintRuleExtensions = (lintRuleExtensions instanceof Array) ? lintRuleExtensions : [lintRuleExtensions]
-			let ruleExtensions = lintRuleExtensions.concat(svelteRuleExtensions)
+	if (eslintLoader) {	
+		lintRule
+			.pre()
 			
-			lintRule
-				.pre()
-				.test(ruleExtensions)
-			neutrino.use(loaderMerge('lint', 'eslint'), {
-				plugins: ['html'],
-				settings: {
-					'html/html-extensions': ['.svelte', '.html', '.htm']
-				},
+		eslintLoader
+			.tap(options => merge(options, {
 				parserOptions: {
 					ecmaFeatures: {
 						experimentalObjectRestSpread: true
 					}
 				}
-			})
-			neutrino.use(loaderMerge('lint', 'eslint'), {
+			}))
+			.tap(options => merge(options, {
 				globals: ['Buffer'],
 				envs: ['browser', 'commonjs']
-			})
-		}
+			}))
 	}
 
 	// console.log(config.toConfig().module.rules)
