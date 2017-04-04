@@ -21,8 +21,8 @@ let merge = require('merge')
 module.exports = function (neutrino) {
 	neutrino.use(env)
 
-	const NODE_MODULES = path.join(__dirname, 'node_modules')
-	const PROJECT_NODE_MODULES = path.join(process.cwd(), 'node_modules')
+	const NODE_MODULES = path.resolve(__dirname, '../node_modules')
+	const PROJECT_NODE_MODULES = path.resolve(process.cwd(), 'node_modules')
 	let config = neutrino.config
 	let testRun = (process.env.NODE_ENV === 'test')
 	let devRun = (process.env.NODE_ENV === 'development')
@@ -75,7 +75,7 @@ module.exports = function (neutrino) {
 		.plugin('html')
 			.use(HtmlWebpackPlugin, [merge({
 				filename: 'index.html',
-				template: __dirname + '/template.ejs',
+				template: path.resolve(__dirname, 'template.ejs'),
 				inject: 'head',
 				mobile: true,
 				minify: {

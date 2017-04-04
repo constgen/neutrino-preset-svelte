@@ -1,17 +1,16 @@
 'use strict'
 
 let ramda = require('ramda')
-// let path = require('path')
+let arrify = require('arrify')
+let path = require('path')
 
-module.exports = function (neutrino, options) {
-	// const NODE_MODULES = path.join(__dirname, 'node_modules')
+module.exports = function (neutrino, options = {}) {
+	const NODE_MODULES = path.resolve(__dirname, '../node_modules')
 	let config = neutrino.config
 	let browsers = ramda.path(['options', 'compile', 'targets', 'browsers'], neutrino)
-	let compileRule = config.module.rules.get('compile')
-	let compileRuleExtensions = compileRule && compileRule.get('test') || []
-	compileRuleExtensions = (compileRuleExtensions instanceof Array) ? compileRuleExtensions : [compileRuleExtensions]
+	let compileRule = config.module.rule('compile')
+	let compileRuleExtensions = arrify(compileRule.get('test'))
 
-	options = options || {}
 	if (!browsers) {
 		Object.assign(neutrino.options, {
 			compile: {
@@ -36,14 +35,15 @@ module.exports = function (neutrino, options) {
 			}
 		})
 	}
-	config.module.rule('compile')
-		.test(compileRuleExtensions.concat(/\.(js)$/))
+
+	compileRule
+		.test(compileRuleExtensions.concat(/\.js$/))
 		.include
 			.merge(options.include || [])
 			.end()
 		.exclude
+			.add(NODE_MODULES)
 			.merge(options.exclude || [])
-			// .add(NODE_MODULES)
 			.end()
 		.use('babel')
 			.loader(require.resolve('babel-loader'))
