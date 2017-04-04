@@ -37,14 +37,14 @@
 
 ## Quickstart
 
-After installing Neutrino and the Svelte preset, add a new directory named `src` in the root of the project, with a single JS file named `index.js` in it. This preset exposes an element in the page `<div id="root"></div>` to which you can mount your application. Edit your `src/index.js` file with the following:
+After installing Neutrino and the Svelte preset, add a new directory named `src` in the root of the project, with a single JS file named `index.js` in it. You can mound you application to the document `<body>`. Edit your `src/index.js` file with the following:
 
 ```js
 import Main from './main.html'
 import './main.css'
 
 new Main({
-  target: document.querySelector('#root')
+  target: document.body
 })
 ```
 
@@ -121,6 +121,7 @@ The following is a list of plugins and their identifiers which can be overridden
 
 - `env`: Injects the value of NODE_ENV into the application as process.env.NODE_ENV;
 - `html`: Creates HTML files when building. Has various options that can be configured via package.json;
+- `html-defer`: Adds `defer` attribute to `<script>` tags in HTML files when building;
 - `chunk`: Defines chunks for manifest and vendor entry points. Can be configured via package.json;
 - `hot`: Enables hot module reloading;
 - `clean`: Clears the contents of build prior to creating a production bundle.
@@ -182,9 +183,9 @@ module.exports = function (neutrino) {
 
 #### HTML files
 
-Under the hood `neutrino-preset-svelte` uses [html-webpack-template](https://www.npmjs.com/package/html-webpack-template) for generating HTML files. If you wish to override how these files are created, define an object in your package.json at `neutrino.options.html` with options matching the format expected by `html-webpack-template`.
+Under the hood `neutrino-preset-svelte` uses [html-webpack-plugin](https://www.npmjs.com/package/html-webpack-plugin) with custom template for generating HTML files. If you wish to override how these files are created, define an object in your package.json at `neutrino.options.html` with options matching the format expected by `html-webpack-plugin` and also with `"mobile"` option.
 
-*Simple Example: Change the application mount ID from "root" to "app":*
+*Simple Example: Change the application title and othe options:*
 
 **package.json**
 ```json
@@ -192,15 +193,16 @@ Under the hood `neutrino-preset-svelte` uses [html-webpack-template](https://www
   "neutrino": {
     "options": {
       "html": {
-        "appMountId": "app",
-        "title": "Document title"
+        "title": "Document title",
+        "mobile": true,
+		  "filename": "index.html"
       }
     }
   }
 }
 ```
 
-*Edvanced Example: Change the application mount ID from "root" to "app":*
+*Edvanced Example: Change the application title and othe options:*
 
 **package.json**
 ```json
@@ -217,8 +219,9 @@ Under the hood `neutrino-preset-svelte` uses [html-webpack-template](https://www
 **custom-preset.js**
 ```js
 module.exports = function (neutrino) {
-  neutrino.options.html.appMountId = 'app'
   neutrino.options.html.title = 'Document title'
+  neutrino.options.html.mobile = true
+  neutrino.options.html.filename = "index.html"
 }
 ```
 

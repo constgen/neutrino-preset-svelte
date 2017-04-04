@@ -11,8 +11,9 @@ let styleLoader = require('neutrino-middleware-style-loader')
 let fontLoader = require('neutrino-middleware-font-loader')
 let imageLoader = require('neutrino-middleware-image-loader')
 let env = require('neutrino-middleware-env')
-let htmlTemplate = require('neutrino-middleware-html-template')
 let namedModules = require('neutrino-middleware-named-modules')
+let HtmlWebpackPlugin = require('html-webpack-plugin')
+let ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 let devServer = require('./dev-server.js')
 let babel = require('./babel.js')
 let merge = require('merge')
@@ -71,9 +72,30 @@ module.exports = function (neutrino) {
 			.set('fs', 'empty')
 			.set('tls', 'empty')
 			.end()
+		.plugin('html')
+			.use(HtmlWebpackPlugin, [merge({
+				filename: 'index.html',
+				template: __dirname + '/template.ejs',
+				inject: 'head',
+				mobile: true,
+				minify: {
+					collapseWhitespace: true, 
+					preserveLineBreaks: true
+				}
+			}, neutrino.options.html)])
+			.end()
+		.plugin('html-defer')
+			.use(ScriptExtHtmlWebpackPlugin, [{
+				defaultAttribute: 'defer'
+			}])
+			.end()
 
 	neutrino.use(babel, {
-		include: [neutrino.options.source, neutrino.options.tests, require.resolve('./polyfills.js')]
+		include: [
+			neutrino.options.source, 
+			neutrino.options.tests, 
+			require.resolve('./polyfills.js')
+		]
 	})
 	neutrino.use(svelte, {
 		include: [neutrino.options.source, neutrino.options.tests]
@@ -82,7 +104,8 @@ module.exports = function (neutrino) {
 	neutrino.use(fontLoader)
 	neutrino.use(imageLoader)
 	neutrino.use(namedModules)
-	neutrino.use(htmlTemplate, neutrino.options.html)
+		
+
 	if (!testRun) {
 		neutrino.use(chunk)
 	}
