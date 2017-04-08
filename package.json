@@ -7,9 +7,9 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/constgen/neutrino-presets.git"
+		"url": "https://github.com/constgen/neutrino-preset-svelte.git"
 	},
-	"homepage": "https://github.com/constgen/neutrino-presets/tree/master/neutrino-preset-svelte",
+	"homepage": "https://github.com/constgen/neutrino-preset-svelte",
 	"keywords": [
 		"neutrino",
 		"preset",
