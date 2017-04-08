@@ -28,7 +28,6 @@ module.exports = function (neutrino) {
 	let devRun = (process.env.NODE_ENV === 'development')
 	let lintRule = config.module.rules.get('lint')
 	let eslintLoader = lintRule && lintRule.uses.get('eslint')
-	let styleRule = config.module.rules.get('style')
 
 	config
 		.devtool(devRun ? 'eval-source-map' : 'source-map')
