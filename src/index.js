@@ -12,11 +12,12 @@ let fontLoader = require('neutrino-middleware-font-loader')
 let imageLoader = require('neutrino-middleware-image-loader')
 let env = require('neutrino-middleware-env')
 let namedModules = require('neutrino-middleware-named-modules')
-let HtmlWebpackPlugin = require('html-webpack-plugin')
-let ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
+let merge = require('merge')
+
 let devServer = require('./dev-server.js')
 let babel = require('./babel.js')
-let merge = require('merge')
+let progress = require('./progress.js')
+let htmlTemplate = require('./html-template.js')
 
 module.exports = function (neutrino) {
 	neutrino.use(env)
@@ -71,23 +72,6 @@ module.exports = function (neutrino) {
 			.set('fs', 'empty')
 			.set('tls', 'empty')
 			.end()
-		.plugin('html')
-			.use(HtmlWebpackPlugin, [merge({
-				filename: 'index.html',
-				template: path.resolve(__dirname, 'template.ejs'),
-				inject: 'head',
-				mobile: true,
-				minify: {
-					collapseWhitespace: true, 
-					preserveLineBreaks: true
-				}
-			}, neutrino.options.html)])
-			.end()
-		.plugin('html-defer')
-			.use(ScriptExtHtmlWebpackPlugin, [{
-				defaultAttribute: 'defer'
-			}])
-			.end()
 
 	neutrino.use(babel, {
 		include: [
@@ -99,6 +83,7 @@ module.exports = function (neutrino) {
 	neutrino.use(svelte, {
 		include: [neutrino.options.source, neutrino.options.tests]
 	})
+	neutrino.use(htmlTemplate)
 	neutrino.use(styleLoader)
 	neutrino.use(fontLoader)
 	neutrino.use(imageLoader)
@@ -112,6 +97,7 @@ module.exports = function (neutrino) {
 		neutrino.use(devServer)
 	} 
 	else {
+		neutrino.use(progress)
 		neutrino.use(clean, { paths: [neutrino.options.output] })
 		neutrino.use(minify)
 		config.output.filename('[name].[chunkhash].bundle.js')
