@@ -74,7 +74,7 @@ Start the app.
 ✔ Build completed
 ```
 
-The console shows that application started at "http://0.0.0.0:5000". This is a way how `webpack-dev-server` starts in both "localhost:5000" and local network IP address (e.g. "http://192.168.1.100:5000"). External IP may be usefull for mobile development. Open a browser to any of mentioned addresses.
+The console shows that application started at "http://0.0.0.0:5000". This is a way how `webpack-dev-server` starts in both "localhost:5000" and local network IP address (e.g. "http://192.168.1.100:5000"). External IP may be usefull for mobile development. The preset tries to automatically start (if not disabled in [custom options](#development-server)) a browser with the URL of the server IP address (if not changed in [custom options](#development-server)).
 
 ## Building
 
@@ -229,7 +229,7 @@ Make sure to use `custom-settings.js` before `neutrino-preset-svelte`.
 
 #### Development server
 
-This preset uses `webpack-dev-srever` for development purposes. It is optimized for building speed, error reports and hot module replacement. The basic configuration allows you to redefine `host`, `port`, `https`.
+This preset uses `webpack-dev-srever` for development purposes. It is optimized for building speed, error reports and hot module replacement. The basic configuration allows you to redefine `host`, `port`, `https`, `open` (whether to open server URL in a default browser).
 
 *Example: change server options:*
 
@@ -241,7 +241,8 @@ This preset uses `webpack-dev-srever` for development purposes. It is optimized 
       "server": {
         "host": "localhost",
         "port": 3000,
-        "https": true
+        "https": true,
+        "open": false
       }
     }
   }
@@ -274,6 +275,8 @@ module.exports = function (neutrino) {
     .historyApiFallback(true)
     .hot(true)
 	 //...
+
+    neutrino.options.server.open = false
 }
 ```
 
