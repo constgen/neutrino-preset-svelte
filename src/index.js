@@ -119,6 +119,6 @@ module.exports = function (neutrino) {
 				envs: ['browser', 'commonjs']
 			}))
 	}
-	console.log(config.toConfig().module.rules[0])
+	
 	// console.log(config.toConfig().module.rules)
 }
