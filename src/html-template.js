@@ -6,9 +6,13 @@ let merge = require('deepmerge')
 let path = require('path')
 
 module.exports = function (neutrino) {
+	let manifest = require(path.resolve(process.cwd(), 'package.json'))
+	let { name, version } = manifest
+
 	neutrino.config
 		.plugin('html')
 			.use(HtmlWebpackPlugin, [merge({
+				title: `${name} ${version || ''}`,
 				filename: 'index.html',
 				template: path.resolve(__dirname, 'template.ejs'),
 				inject: 'head',
