@@ -2,7 +2,7 @@
 
 let HtmlWebpackPlugin = require('html-webpack-plugin')
 let ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
-let merge = require('merge')
+let merge = require('deepmerge')
 let path = require('path')
 
 module.exports = function (neutrino) {
@@ -17,7 +17,7 @@ module.exports = function (neutrino) {
 					collapseWhitespace: true, 
 					preserveLineBreaks: true
 				}
-			}, neutrino.options.html)])
+			}, neutrino.options.html || {})])
 			.end()
 		.plugin('html-defer')
 			.use(ScriptExtHtmlWebpackPlugin, [{

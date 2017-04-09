@@ -12,7 +12,7 @@ let fontLoader = require('neutrino-middleware-font-loader')
 let imageLoader = require('neutrino-middleware-image-loader')
 let env = require('neutrino-middleware-env')
 let namedModules = require('neutrino-middleware-named-modules')
-let merge = require('merge')
+let merge = require('deepmerge')
 
 let devServer = require('./dev-server.js')
 let babel = require('./babel.js')
@@ -106,7 +106,6 @@ module.exports = function (neutrino) {
 	if (eslintLoader) {	
 		lintRule
 			.pre()
-			
 		eslintLoader
 			.tap(options => merge(options, {
 				parserOptions: {
@@ -120,6 +119,6 @@ module.exports = function (neutrino) {
 				envs: ['browser', 'commonjs']
 			}))
 	}
-
+	console.log(config.toConfig().module.rules[0])
 	// console.log(config.toConfig().module.rules)
 }
