@@ -50,6 +50,10 @@ module.exports = function (neutrino) {
 			.add('.js')
 			.add('.json')
 			.end().end()
+		.resolve.alias
+			// Make sure 2 versions of "core-js" always match in package.json and babel-polyfill/package.json
+			.set('core-js', path.dirname(require.resolve('core-js')))
+			.end().end()
 		.resolve.modules
 			.add('node_modules')
 			.add(NODE_MODULES)
