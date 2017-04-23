@@ -7,7 +7,7 @@ let dns = require('dns')
 let os = require('os')
 
 let platformHostName = os.hostname()
-let ipReady = new Promise (function(done, failed){
+let whenIPReady = new Promise (function(done, failed){
 	dns.lookup(platformHostName, function (err, ip) {
 		if (err) {
 			return failed(err)
@@ -23,7 +23,7 @@ module.exports = function (neutrino) {
 	let server = ramda.pathOr({}, ['options', 'server'], neutrino)
 	let protocol = process.env.HTTPS ? 'https' : 'http'
 	let host = process.env.HOST || server.host || '0.0.0.0'
-	let port = process.env.PORT || server.host || 5000
+	let port = process.env.PORT || server.port || 5000
 	let https = (protocol === 'https') || server.https
 	let openInBrowser = (server.open === undefined) ? true : server.open
 
@@ -43,15 +43,14 @@ module.exports = function (neutrino) {
 			errorDetails: true,
 			hash: false,
 			modules: false,
-			publicPath: false,
 			timings: false,
 			version: false,
 			warnings: true
 		})
 
 	config.entry('index')
-		.add(`webpack-dev-server/client?${protocol}://${host}:${port}/`)
-		.add('webpack/hot/dev-server')
+		.add(`${require.resolve('webpack-dev-server/client')}?${protocol}://${host}:${port}/`)
+		.add(require.resolve('webpack/hot/dev-server'))
 
 	if (openInBrowser) {
 		neutrino.on('start', function() {
@@ -59,7 +58,7 @@ module.exports = function (neutrino) {
 			let serverPort = config.devServer.get('port')
 			let serverProtocol = config.devServer.get('https') ? 'https' : 'http'
 			if (serverHost === '0.0.0.0') {
-				ipReady.then(function(ip){
+				whenIPReady.then(function(ip){
 					return `${serverProtocol}://${ip}:${serverPort}` 
 				}).then(open)
 			}
