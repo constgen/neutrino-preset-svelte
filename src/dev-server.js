@@ -34,6 +34,9 @@ module.exports = function (neutrino) {
 		.contentBase(neutrino.options.source)
 		.historyApiFallback(true)
 		.hot(true)
+		.headers({
+			host: host
+		})
 		.publicPath('/')
 		.stats({
 			assets: false,
