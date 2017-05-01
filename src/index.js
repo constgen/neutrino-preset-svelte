@@ -1,12 +1,10 @@
 'use strict'
 
 let path = require('path')
-let loaderMerge = require('neutrino-middleware-loader-merge')
 let svelte = require('neutrino-middleware-svelte-loader')
 let chunk = require('neutrino-middleware-chunk')
 let clean = require('neutrino-middleware-clean')
 let minify = require('neutrino-middleware-minify')
-let copy = require('neutrino-middleware-copy')
 let styleLoader = require('neutrino-middleware-style-loader')
 let fontLoader = require('neutrino-middleware-font-loader')
 let imageLoader = require('neutrino-middleware-image-loader')
@@ -35,8 +33,8 @@ module.exports = function (neutrino) {
 		.target('web')
 		.context(neutrino.options.root)
 		.entry('polyfill')
-		 	.add(require.resolve('./polyfills.js'))
-		 	.end()
+			.add(require.resolve('./polyfills.js'))
+			.end()
 		.entry('index')
 			.add(neutrino.options.entry)
 			.end()

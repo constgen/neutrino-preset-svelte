@@ -1,6 +1,6 @@
 {
 	"name": "neutrino-preset-svelte",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "Neutrino preset for Svelte applications",
 	"main": "src/index.js",
 	"author": "Constantine Genchevsky <const.gen@gmail.com>",
@@ -19,11 +19,9 @@
 	],
 	"dependencies": {
 		"neutrino-middleware-svelte-loader": "~2.0.2",
-		"neutrino-middleware-loader-merge": "~5.3.0",
 		"neutrino-middleware-chunk": "~5.3.0",
 		"neutrino-middleware-clean": "~5.3.0",
 		"neutrino-middleware-minify": "~5.3.0",
-		"neutrino-middleware-copy": "~5.3.0",
 		"neutrino-middleware-style-loader": "~5.3.0",
 		"neutrino-middleware-font-loader": "~5.3.0",
 		"neutrino-middleware-image-loader": "~5.3.0",
@@ -46,6 +44,9 @@
 		"progress-bar-webpack-plugin": "1.9.3",
 		"webpack": "^2.3.1",
 		"webpack-dev-server": "^2.4.1"
+	},
+	"devDependencies": {
+		"eslint": "~3.19.0"
 	},
 	"peerDependencies": {
 		"neutrino": "^5.3.0"

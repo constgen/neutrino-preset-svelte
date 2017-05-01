@@ -47,6 +47,7 @@ module.exports = function (neutrino) {
 			errorDetails: true,
 			hash: false,
 			modules: false,
+			publicPath: false,
 			timings: false,
 			version: false,
 			warnings: true
