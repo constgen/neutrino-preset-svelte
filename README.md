@@ -10,7 +10,7 @@
 - Zero upfront configuration necessary to start developing and building a Svelte web app
 - Modern Babel compilation supporting ES modules, last several major browser versions, async functions, dynamic imports, ES class properties, rest spread operators and automatic polyfills bound to platforms
 - Webpack loaders for importing HTML Svelte components, CSS, images, icons, and fonts
-- Inheritense of Eslint rules for Svelte components `<script>` tags linting
+- ESlint integration in Svelte components `<script>` tags
 - Webpack Dev Server during development on "localhost" and local network IP for external devices access
 - Automatic creation of HTML pages, no templating of "index.html" necessary
 - Hot reloading support
@@ -21,14 +21,14 @@
 ## Requirements
 
 - Node.js v6.9+
-- Neutrino v5
+- Neutrino v6
 
 ## Installation
 
-`neutrino-preset-svelte` can be installed from NPM. Make sure `neutrino`, `svelte` and `neutrino-preset-svelte` are development dependencies in your project.
+`neutrino-preset-svelte` can be installed from NPM. Make sure `neutrino`, and `neutrino-preset-svelte` are development dependencies in your project. `svelte` is installed as an internal dependency of `neutrino-preset-svelte`
 
 ```
-❯ npm install --save-dev neutrino svelte neutrino-preset-svelte
+❯ npm install --save-dev neutrino neutrino-preset-svelte
 ```
 
 ## Project Layout
@@ -41,7 +41,7 @@ After installing Neutrino and the Svelte preset, add a new directory named `src`
 
 ```js
 import Main from './main.html'
-import './main.css'
+import './common.css'
 
 new Main({
   target: document.body
@@ -57,12 +57,16 @@ Now edit your project's `package.json` to add commands for starting and building
   "scripts": {
     "start": "neutrino start",
     "build": "neutrino build"
-  },
-  "neutrino": {
-    "use": [
-      "neutrino-preset-svelte"
-    ]
   }
+}
+```
+And add the new file `.neutrinorc.js` in the root of the project:
+
+```js
+module.exports = {
+  use: [
+    'neutrino-preset-svelte'
+  ]
 }
 ```
 
@@ -85,6 +89,10 @@ The console shows that application started at "http://0.0.0.0:5000". This is a w
 ```
 
 You can either serve or deploy the contents of this build directory as a static site.
+
+## Static assets
+
+If you wish to copy files to the build directory that are not imported from application code, you can place them in a directory within `src` called `static`. All files in this directory will be copied from `src/static` to `build/static`.
 
 ## Hot Reloading
 
@@ -124,7 +132,8 @@ The following is a list of plugins and their identifiers which can be overridden
 - `html-defer`: Adds `defer` attribute to `<script>` tags in HTML files when building;
 - `chunk`: Defines chunks for manifest and vendor entry points. Can be configured via package.json;
 - `hot`: Enables hot module reloading;
-- `clean`: Clears the contents of build prior to creating a production bundle.
+- `clean`: Clears the contents of build prior to creating a production bundle;
+- `copy`: Copies files during build, defaults from `src/static` to `build/static`.
 <!--- `progress`: Displays a progress bar when using neutrino build.-->
 
 ### Customization and configuration
