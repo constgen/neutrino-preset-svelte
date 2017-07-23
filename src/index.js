@@ -4,13 +4,14 @@ let path = require('path')
 let svelte = require('neutrino-middleware-svelte-loader')
 let chunk = require('neutrino-middleware-chunk')
 let clean = require('neutrino-middleware-clean')
+let copy = require('neutrino-middleware-copy')
 let minify = require('neutrino-middleware-minify')
 let styleLoader = require('neutrino-middleware-style-loader')
 let fontLoader = require('neutrino-middleware-font-loader')
 let imageLoader = require('neutrino-middleware-image-loader')
 let env = require('neutrino-middleware-env')
-let namedModules = require('neutrino-middleware-named-modules')
 let merge = require('deepmerge')
+let arrify = require('arrify')
 
 let devServer = require('./dev-server.js')
 let babel = require('./babel.js')
@@ -18,8 +19,7 @@ let progress = require('./progress.js')
 let htmlTemplate = require('./html-template.js')
 
 module.exports = function (neutrino) {
-	neutrino.use(env)
-
+	const LOADER_EXTENSIONS = /\.(html?|svelte|svlt)$/
 	const NODE_MODULES = path.resolve(__dirname, '../node_modules')
 	const PROJECT_NODE_MODULES = path.resolve(process.cwd(), 'node_modules')
 	let config = neutrino.config
@@ -27,6 +27,7 @@ module.exports = function (neutrino) {
 	let devRun = (process.env.NODE_ENV === 'development')
 	let lintRule = config.module.rules.get('lint')
 	let eslintLoader = lintRule && lintRule.uses.get('eslint')
+	let lintExtensions = arrify(lintRule && lintRule.get('test')).concat(LOADER_EXTENSIONS)
 
 	config
 		.devtool(devRun ? 'eval-source-map' : 'source-map')
@@ -67,7 +68,7 @@ module.exports = function (neutrino) {
 			.set('console', false)
 			.set('global', true)
 			.set('process', true)
-			.set('Buffer', true)
+			.set('Buffer', false)
 			.set('__filename', 'mock')
 			.set('__dirname', 'mock')
 			.set('setImmediate', true)
@@ -75,6 +76,7 @@ module.exports = function (neutrino) {
 			.set('tls', 'empty')
 			.end()
 
+	neutrino.use(env)
 	neutrino.use(babel, {
 		include: [
 			neutrino.options.source, 
@@ -89,9 +91,7 @@ module.exports = function (neutrino) {
 	neutrino.use(styleLoader)
 	neutrino.use(fontLoader)
 	neutrino.use(imageLoader)
-	neutrino.use(namedModules)
 		
-
 	if (!testRun) {
 		neutrino.use(chunk)
 	}
@@ -102,6 +102,13 @@ module.exports = function (neutrino) {
 		neutrino.use(progress)
 		neutrino.use(clean, { paths: [neutrino.options.output] })
 		neutrino.use(minify)
+		neutrino.use(copy, {
+			patterns: [{
+				context: neutrino.options.static,
+				from: '**/*',
+				to: path.basename(neutrino.options.static)
+			}]
+		})
 		config.output.filename('[name].[chunkhash].bundle.js')
 	}
 
@@ -117,10 +124,23 @@ module.exports = function (neutrino) {
 				}
 			}))
 			.tap(options => merge(options, {
-				globals: ['Buffer'],
 				envs: ['browser', 'commonjs']
 			}))
 	}
-	
+
+	if (eslintLoader) {
+		lintRule
+			.pre()
+			.test(lintExtensions)
+		eslintLoader
+			.tap(options => merge(options, {
+				plugins: ['html'],
+				settings: {
+					'html/html-extensions': ['.html', '.htm', '.svelte', '.svlt']
+				}
+			}))
+			.end()
+	}
+
 	// console.log(config.toConfig().module.rules)
 }
