@@ -18,7 +18,7 @@ let babel = require('./babel.js')
 let progress = require('./progress.js')
 let htmlTemplate = require('./html-template.js')
 
-module.exports = function (neutrino) {
+module.exports = function (neutrino, options = {}) {
 	const LOADER_EXTENSIONS = /\.(html?|svelte|svlt)$/
 	const NODE_MODULES = path.resolve(__dirname, '../node_modules')
 	const PROJECT_NODE_MODULES = path.resolve(process.cwd(), 'node_modules')
@@ -82,7 +82,10 @@ module.exports = function (neutrino) {
 			neutrino.options.source, 
 			neutrino.options.tests, 
 			require.resolve('./polyfills.js')
-		]
+		],
+		targets: {
+			browsers: options.browsers
+		}
 	})
 	neutrino.use(svelte, {
 		include: [neutrino.options.source, neutrino.options.tests]
@@ -96,7 +99,7 @@ module.exports = function (neutrino) {
 		neutrino.use(chunk)
 	}
 	if (devRun) {
-		neutrino.use(devServer)
+		neutrino.use(devServer, options.server)
 	} 
 	else {
 		neutrino.use(progress)
