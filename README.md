@@ -78,7 +78,7 @@ Start the app.
 ✔ Build completed
 ```
 
-The console shows that application started at "http://0.0.0.0:5000". This is a way how `webpack-dev-server` starts in both "localhost:5000" and local network IP address (e.g. "http://192.168.1.100:5000"). External IP may be usefull for mobile development. The preset tries to automatically start (if not disabled in [custom options](#development-server)) a browser with the URL of the server IP address (if not changed in [custom options](#development-server)).
+The console shows that application started at "http://0.0.0.0:5000". This is a way how `webpack-dev-server` starts in both "localhost:5000" and local network IP address (e.g. "http://192.168.1.100:5000"). External IP may be useful for mobile development. The preset tries to automatically start (if not disabled in [custom options](#preset-options)) a browser with the URL of the server IP address (if not changed in [custom options](#preset-options)).
 
 ## Building
 
@@ -100,16 +100,100 @@ If you wish to copy files to the build directory that are not imported from appl
 
 <!--Using dynamic imports with `import()` will automatically create split points and hot replace those modules upon modification during development.-->
 
+## Preset options
+
+You can provide custom options and have them merged with this preset's default options to easily affect how this
+preset builds. You can modify the preset settings from `.neutrinorc.js` by overriding with an options object. Use
+an array pair instead of a string to supply these options in `.neutrinorc.js`.
+
+The following shows how you can pass an options object to the preset and override its options, showing the defaults:
+
+**.neutrinorc.js**
+```js
+module.exports = {
+  use: [
+    ['neutrino-preset-svelte', {
+      // options related to generating the HTML document
+      html: {
+        title: `${name} ${version}`,
+        filename: 'index.html',
+        template: path.resolve(__dirname, 'template.ejs'),
+        inject: 'head',
+        mobile: true,
+        minify: {
+          collapseWhitespace: true, 
+          preserveLineBreaks: true
+        }
+      },
+
+      //  options related to starting a development server
+      server: {
+        https: false,
+        host: '0.0.0.0',
+        port: 5000,
+        open: true
+      },
+
+      // supported browsers in Browser List format
+      browsers: [
+        'last 3 chrome versions',
+        'last 3 firefox versions',
+        'last 3 edge versions',
+        'last 3 opera versions',
+        'last 3 safari versions',
+        'last 1 ie version',
+        'last 1 ie_mob version',
+        'last 1 blackberry version',
+        'last 3 and_chr versions',
+        'last 3 and_ff versions',
+        'last 3 op_mob versions',
+        'last 2 op_mini versions',
+        'ios >= 8',
+        'android >= 4'
+      ]
+    }]
+  ]
+};
+```
+
+*Example: Enable HTTPS, disable auto-opening of a browser, change the page title, define supported browsers:*
+
+**.neutrinorc.js**
+```js
+module.exports = {
+  use: [
+    ['neutrino-preset-svelte', {
+      // Example: disable Hot Module Replacement
+      server: {
+        https: true,
+        open: false
+      },
+
+      // Example: change the page title
+      html: {
+        title: 'Svelte App'
+      },
+
+      // Example: change supported browsers list
+      browsers: [
+        'last 3 versions'
+      ]
+    }]
+  ]
+};
+```
+
 ## Customizing
 
-Consumers may provide their custom configurations for different parts of current preset that will override its defaults. Also if you want to construct your own preset based on `neutrino-preset-svelte` you can use information below.
+Consumers may provide their custom configurations for different parts of the current preset that will override its defaults. Also if you want to construct your own preset based on `neutrino-preset-svelte` you can use information below.
 
 To override the build configuration, start with the documentation on [customization](https://neutrino.js.org/customization). `neutrino-preset-svelte` creates some conventions to make overriding the configuration easier once you are ready to make changes.
 
 ### Entry points
 
-By default the Svelte preset creates these entrypoints to your application:
+By default the Svelte preset creates these entry points to your application:
 
+- `polyfill`: contains platform polyfills according to the chosen browsers in the Browser List.
 - `index`: maps to the `index.js` file in the src directory. This value is provided by `neutrino.options.entry`.
 
 ### Rules
@@ -136,183 +220,25 @@ The following is a list of plugins and their identifiers which can be overridden
 - `copy`: Copies files during build, defaults from `src/static` to `build/static`.
 <!--- `progress`: Displays a progress bar when using neutrino build.-->
 
-### Customization and configuration
+### Override configuration
 
-By following the [Simple customization guide](https://neutrino.js.org/customization/simple) and [Advanced customization guide](https://neutrino.js.org/customization/advanced) and knowing the rule, loader, and plugin IDs above, you can override and augment the build directly from package.json or from JS module which overrides the config. 
+By following the [customization guide](https://neutrino.js.org/customization) and knowing the rule, loader, and plugin IDs above,
+you can override and augment the build by providing a function to your `.neutrinorc.js` use array. You can also
+make these changes from the Neutrino API in custom middleware.
 
 #### Vendoring
 
-By defining an entry point named "vendor" you can split out external dependencies into a chunk separate from your application code. You can do this in 2 ways: by defining an entry point in package.json or by writing a configuration module.
+By defining an entry point named `vendor` you can split out external dependencies into a chunk separate
+from your application code.
 
-*Simple Example: Put lodash into a separate "vendor" chunk:*
+_Example: Put lodash into a separate "vendor" chunk:_
 
-**package.json**
-```json
-{
-  "neutrino": {
-    "config": {
-      "entry": {
-        "vendor": [
-          "lodash"
-        ]
-      }
-    }
-  },
-  "dependencies": {
-    "lodash": "*"
-  }
-}
-```
-
-*Edvanced Example: Put lodash into a separate "vendor" chunk:*
-
-**package.json**
-```json
-{
-  "neutrino": {
-    "use": [
-      "neutrino-preset-svelte",
-      "./custom-preset.js"
-    ]
-  },
-  "dependencies": {
-    "lodash": "*"
-  }
-}
-```
-
-**custom-preset.js**
+**.neutrinorc.js**
 ```js
-module.exports = function (neutrino) {
-  neutrino.config
-    .entry('vendor')
-    .add('lodash')
+module.exports = {
+  use: [
+    'neutrino-preset-svelte',
+    neutrino => neutrino.config.entry('vendor').add('lodash')
+  ]
 }
 ```
-
-#### HTML files
-
-Under the hood `neutrino-preset-svelte` uses [html-webpack-plugin](https://www.npmjs.com/package/html-webpack-plugin) with custom template for generating HTML files. If you wish to override how these files are created, define an object in your package.json at `neutrino.options.html` with options matching the format expected by `html-webpack-plugin` and also with `"mobile"` option.
-
-*Simple Example: Change the application title and othe options:*
-
-**package.json**
-```json
-{
-  "neutrino": {
-    "options": {
-      "html": {
-        "title": "Document title",
-        "mobile": true,
-		  "filename": "index.html"
-      }
-    }
-  }
-}
-```
-
-*Edvanced Example: Change the application title and othe options:*
-
-**package.json**
-```json
-{
-  "neutrino": {
-    "use": [
-      "./custom-settings.js",
-      "neutrino-preset-svelte"
-    ]
-  }
-}
-```
-
-**custom-preset.js**
-```js
-module.exports = function (neutrino) {
-  neutrino.options.html.title = 'Document title'
-  neutrino.options.html.mobile = true
-  neutrino.options.html.filename = "index.html"
-}
-```
-
-Make sure to use `custom-settings.js` before `neutrino-preset-svelte`.
-
-#### Development server
-
-This preset uses `webpack-dev-srever` for development purposes. It is optimized for building speed, error reports and hot module replacement. The basic configuration allows you to redefine `host`, `port`, `https`, `open` (whether to open server URL in a default browser).
-
-*Example: change server options:*
-
-**package.json**
-```json
-{
-  "neutrino": {
-    "options": {
-      "server": {
-        "host": "localhost",
-        "port": 3000,
-        "https": true,
-        "open": false
-      }
-    }
-  }
-}
-```
-
-If you want to customize more you can use advanced approach where you can redefine all [webpack-dev-server properties](https://webpack.js.org/configuration/dev-server/#components/sidebar/sidebar.jsx).
-
-*Example: configure web server:*
-
-**package.json**
-```json
-{
-  "neutrino": {
-    "use": [
-      "neutrino-preset-svelte",
-      "./custom-preset.js"
-    ]
-  }
-}
-```
-
-**custom-preset.js**
-```js
-module.exports = function (neutrino) {
-  neutrino.config.devServer
-    .host('localhost')
-    .port(3000)
-    .https(true)
-    .historyApiFallback(true)
-    .hot(true)
-	 //...
-
-    neutrino.options.server.open = false
-}
-```
-
-#### Compile targets
-
-This preset uses `babel-preset-env` which by default uses compatibility with 3-4 latest versions of different browser. This can be redefined for custom platforms.
-
-*Esample: change supported browsers to automatically bundle necessary polyfills for them:*
-
-**package.json**
-```json
-{
-  "neutrino": {
-    "options": {
-      "compile": {
-        "targets": {
-          "browsers": ["last 2 versions", "ie 9"]
-        },
-        "include": ["transform-es2015-arrow-functions", "es6.map"],
-        "exclude": ["transform-regenerator", "es6.set"]
-      }
-    }
-  }
-}
-```
-
-This is an example with [browserlist](https://github.com/ai/browserslist) config. Full scope of configurations can be found in [babel-preset-env](https://github.com/babel/babel-preset-env/blob/master/README.md)
-
-
-

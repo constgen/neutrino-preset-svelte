@@ -90,7 +90,7 @@ module.exports = function (neutrino, options = {}) {
 	neutrino.use(svelte, {
 		include: [neutrino.options.source, neutrino.options.tests]
 	})
-	neutrino.use(htmlTemplate)
+	neutrino.use(htmlTemplate, options.html)
 	neutrino.use(styleLoader)
 	neutrino.use(fontLoader)
 	neutrino.use(imageLoader)

@@ -1,6 +1,5 @@
 'use strict'
 
-let ramda = require('ramda')
 let hot = require('neutrino-middleware-hot')
 let open = require('opn')
 let dns = require('dns')
@@ -16,16 +15,15 @@ let whenIPReady = new Promise (function(done, failed){
 	})
 })
 
-module.exports = function (neutrino) {
+module.exports = function (neutrino, options = {}) {
 	neutrino.use(hot)
 
 	let config = neutrino.config
-	let server = ramda.pathOr({}, ['options', 'server'], neutrino)
 	let protocol = process.env.HTTPS ? 'https' : 'http'
-	let host = process.env.HOST || server.host || '0.0.0.0'
-	let port = process.env.PORT || server.port || 5000
-	let https = (protocol === 'https') || server.https
-	let openInBrowser = (server.open === undefined) ? true : server.open
+	let host = process.env.HOST || options.host || '0.0.0.0'
+	let port = process.env.PORT || options.port || 5000
+	let https = (protocol === 'https') || options.https
+	let openInBrowser = (options.open === undefined) ? true : options.open
 
 	config.devServer
 		.host(String(host))

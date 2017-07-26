@@ -49,6 +49,7 @@ module.exports = function (neutrino, options = {}) {
 						modules: false,
 						useBuiltIns: true,
 						include: [],
+						exclude: [],
 						targets: targets
 					}]
 				],

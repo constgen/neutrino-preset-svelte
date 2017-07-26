@@ -18,8 +18,8 @@
 		"webpack"
 	],
 	"dependencies": {
-		"svelte": "~1.25.1",
-		"neutrino-middleware-svelte-loader": "~3.0.0",
+		"svelte": "~1.26.0",
+		"neutrino-middleware-svelte-loader": "~3.1.0",
 		"neutrino-middleware-chunk": "~6.1.4",
 		"neutrino-middleware-clean": "~6.1.4",
 		"neutrino-middleware-copy": "~6.1.4",
@@ -31,7 +31,6 @@
 		"neutrino-middleware-hot": "~6.1.4",
 		"babel-polyfill": "6.23.0",
 		"core-js": "^2.4.0",
-		"ramda": "~0.24.1",
 		"deepmerge": "~1.5.0",
 		"arrify": "~1.0.1",
 		"opn": "~5.1.0",

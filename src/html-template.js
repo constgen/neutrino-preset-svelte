@@ -5,7 +5,7 @@ let ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 let merge = require('deepmerge')
 let path = require('path')
 
-module.exports = function (neutrino) {
+module.exports = function (neutrino, options = {}) {
 	let manifest = require(path.resolve(process.cwd(), 'package.json'))
 	let { name, version } = manifest
 
@@ -21,7 +21,7 @@ module.exports = function (neutrino) {
 					collapseWhitespace: true, 
 					preserveLineBreaks: true
 				}
-			}, neutrino.options.html || {})])
+			}, options)])
 			.end()
 		.plugin('html-defer')
 			.use(ScriptExtHtmlWebpackPlugin, [{
