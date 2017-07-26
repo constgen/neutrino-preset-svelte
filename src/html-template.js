@@ -8,6 +8,7 @@ let path = require('path')
 module.exports = function (neutrino, options = {}) {
 	let manifest = require(path.resolve(process.cwd(), 'package.json'))
 	let { name, version } = manifest
+	let chunkOrder = ['runtime', 'polyfill']
 
 	neutrino.config
 		.plugin('html')
@@ -20,6 +21,17 @@ module.exports = function (neutrino, options = {}) {
 				minify: {
 					collapseWhitespace: true, 
 					preserveLineBreaks: true
+				},
+				chunksSortMode: function(a, b){
+					let aIndex = chunkOrder.indexOf(a.names[0])
+					let bIndex = chunkOrder.indexOf(b.names[0])
+					if (aIndex < 0) {
+						return 1
+					}
+					if (bIndex < 0) {
+						return -1
+					}
+					return aIndex - bIndex
 				}
 			}, options)])
 			.end()
