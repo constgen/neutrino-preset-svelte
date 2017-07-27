@@ -1,5 +1,7 @@
 # Neutrino Svelte preset
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/constgen/neutrino-preset-svelte.svg)](https://greenkeeper.io/)
+
 [![npm](https://img.shields.io/npm/v/neutrino-preset-svelte.svg)](https://www.npmjs.com/package/neutrino-preset-svelte)
 [![npm](https://img.shields.io/npm/dt/neutrino-preset-svelte.svg)](https://www.npmjs.com/package/neutrino-preset-svelte)
 
