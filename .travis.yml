@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "6.9"
+install:
+  - npm install
+cache:
+  directories:
+  - node_modules
+# before_script:
+script:
+  - npm test
+notifications:
+    email:
+      on_pull_requests: false
+      on_success: change # default: always
+      on_failure: change # default: always
