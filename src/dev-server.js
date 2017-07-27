@@ -18,16 +18,16 @@ module.exports = function (neutrino, options = {}) {
 	let publicHost = ip.address('public', 'ipv4')
 
 	config.devServer
-      .host(host)
-      .port(Number(port))
-      .https(Boolean(https))
-      .contentBase(contentBase)
-      .historyApiFallback(true)
+		.host(host)
+		.port(Number(port))
+		.https(Boolean(https))
+		.contentBase(contentBase)
+		.historyApiFallback(true)
 		.hot(true)
 		.headers({
 			host: publicHost
 		})
-      .public(publicHost) //.public(`${publicHost}:${port}`)
+						.public(publicHost) //.public(`${publicHost}:${port}`)
 		.publicPath('/')
 		.stats({
 			assets: false,
@@ -54,8 +54,8 @@ module.exports = function (neutrino, options = {}) {
 				opn(`${protocol}://${localHost}:${port}`)
 			})
 		})
-      .end()
-    .entry('index')
-      .prepend(require.resolve('webpack/hot/dev-server'))
-      .prepend(`${require.resolve('webpack-dev-server/client')}?${protocol}://${host}:${port}`)
+		.end()
+	.entry('index')
+		.prepend(require.resolve('webpack/hot/dev-server'))
+		.prepend(`${require.resolve('webpack-dev-server/client')}?${protocol}://${host}:${port}`)
 }

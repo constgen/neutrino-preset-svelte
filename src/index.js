@@ -79,8 +79,8 @@ module.exports = function (neutrino, options = {}) {
 	neutrino.use(env)
 	neutrino.use(babel, {
 		include: [
-			neutrino.options.source, 
-			neutrino.options.tests, 
+			neutrino.options.source,
+			neutrino.options.tests,
 			require.resolve('./polyfills.js')
 		],
 		targets: {
@@ -94,13 +94,13 @@ module.exports = function (neutrino, options = {}) {
 	neutrino.use(styleLoader)
 	neutrino.use(fontLoader)
 	neutrino.use(imageLoader)
-		
+
 	if (!testRun) {
 		neutrino.use(chunk)
 	}
 	if (devRun) {
 		neutrino.use(devServer, options.server)
-	} 
+	}
 	else {
 		neutrino.use(progress)
 		neutrino.use(clean, { paths: [neutrino.options.output] })
@@ -115,7 +115,7 @@ module.exports = function (neutrino, options = {}) {
 		config.output.filename('[name].[chunkhash].bundle.js')
 	}
 
-	if (eslintLoader) {	
+	if (eslintLoader) {
 		lintRule
 			.pre()
 		eslintLoader

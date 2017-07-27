@@ -19,12 +19,12 @@ module.exports = function (neutrino, options = {}) {
 				inject: 'head',
 				mobile: true,
 				minify: {
-					collapseWhitespace: true, 
+					collapseWhitespace: true,
 					preserveLineBreaks: true
 				},
-				chunksSortMode: function(a, b){
-					let aIndex = chunkOrder.indexOf(a.names[0])
-					let bIndex = chunkOrder.indexOf(b.names[0])
+				chunksSortMode: function(aChunk, bChunk){
+					let aIndex = chunkOrder.indexOf(aChunk.names[0])
+					let bIndex = chunkOrder.indexOf(bChunk.names[0])
 					if (aIndex < 0) {
 						return 1
 					}
