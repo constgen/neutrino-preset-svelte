@@ -131,7 +131,8 @@ module.exports = {
         https: false,
         host: '0.0.0.0',
         port: 5000,
-        open: true
+        open: true,
+        contentBase: neutrino.options.source
       },
 
       // supported browsers in Browser List format
