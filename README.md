@@ -32,6 +32,8 @@
 ❯ npm install --save-dev neutrino neutrino-preset-svelte
 ```
 
+Don't install Svelte in your project because it is already included to the preset. The used Svelte version is always mentioned in the [Release notes](https://github.com/constgen/neutrino-preset-svelte/releases)
+
 ## Project Layout
 
 `neutrino-preset-svelte` follows the standard [project layout](https://neutrino.js.org/project-layout) specified by Neutrino. This means that by default all project source code should live in a directory named `src` in the root of the project. This includes JavaScript files, CSS stylesheets, images, and any other assets that would be available to your compiled project. Only files explicitly imported or lazy loaded to your project will be bundled.
