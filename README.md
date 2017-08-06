@@ -1,9 +1,8 @@
 # Neutrino Svelte preset
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/constgen/neutrino-preset-svelte.svg)](https://greenkeeper.io/)
-
 [![npm](https://img.shields.io/npm/v/neutrino-preset-svelte.svg)](https://www.npmjs.com/package/neutrino-preset-svelte)
 [![npm](https://img.shields.io/npm/dt/neutrino-preset-svelte.svg)](https://www.npmjs.com/package/neutrino-preset-svelte)
+[![Greenkeeper badge](https://badges.greenkeeper.io/constgen/neutrino-preset-svelte.svg)](https://greenkeeper.io/)
 
 `neutrino-preset-svelte` is a [Neutrino](https://neutrino.js.org) preset for creation of [Svelte](https://svelte.technology) applications for web platforms.
 
@@ -128,16 +127,16 @@ module.exports = {
         }
       },
 
-      //  options related to starting a development server
+      // options related to a development server
       server: {
         https: false,
-        host: '0.0.0.0',
+        public: true,
         port: 5000,
         open: true,
         contentBase: neutrino.options.source
       },
 
-      // supported browsers in Browser List format
+      // supported browsers in a Browser List format
       browsers: [
         'last 3 chrome versions',
         'last 3 firefox versions',
@@ -177,7 +176,7 @@ module.exports = {
         title: 'Svelte App'
       },
 
-      // Example: change supported browsers list
+      // Example: change supported browsers
       browsers: [
         'last 3 versions'
       ]
