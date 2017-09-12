@@ -31,7 +31,7 @@
 		"neutrino-middleware-style-loader": "~6.1.5",
 		"neutrino-middleware-font-loader": "~6.1.5",
 		"neutrino-middleware-image-loader": "~6.1.5",
-		"neutrino-middleware-env": "~6.1.5",
+		"neutrino-middleware-env": "~6.2.0",
 		"neutrino-middleware-hot": "~6.1.5",
 		"babel-polyfill": "6.23.0",
 		"core-js": "^2.4.0",
