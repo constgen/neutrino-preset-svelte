@@ -28,7 +28,7 @@
 		"neutrino-middleware-clean": "~6.1.5",
 		"neutrino-middleware-copy": "~6.2.0",
 		"neutrino-middleware-minify": "~6.1.5",
-		"neutrino-middleware-style-loader": "~6.2.0",
+		"neutrino-middleware-style-loader": "~7.0.0",
 		"neutrino-middleware-font-loader": "~6.1.5",
 		"neutrino-middleware-image-loader": "~6.2.0",
 		"neutrino-middleware-env": "~6.1.5",
