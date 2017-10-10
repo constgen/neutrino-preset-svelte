@@ -48,7 +48,7 @@
 		"progress-bar-webpack-plugin": "~1.10.0",
 		"webpack": "^3.4.1",
 		"webpack-dev-server": "2.9.0",
-		"eslint-plugin-html": "~3.2.0",
+		"eslint-plugin-html": "~4.0.0-alpha.1",
 		"ip": "~1.1.5"
 	},
 	"devDependencies": {
