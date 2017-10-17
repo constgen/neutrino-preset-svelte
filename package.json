@@ -22,7 +22,7 @@
 		"lint": "eslint --ext .js src/ "
 	},
 	"dependencies": {
-		"svelte": "~1.40.0",
+		"svelte": "~1.41.0",
 		"neutrino-middleware-svelte-loader": "~3.1.0",
 		"neutrino-middleware-chunk": "~6.2.0",
 		"neutrino-middleware-clean": "~6.1.5",
