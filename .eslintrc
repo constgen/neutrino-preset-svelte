@@ -7,7 +7,7 @@
   "extends": "eslint:recommended",
   "rules": {
     "comma-dangle": ["error", "never"],
-    "indent": ["error", "tab", {"MemberExpression": "off"}],
+    "indent": ["error", "tab", {"MemberExpression": "off", "SwitchCase": 1}],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "never"],

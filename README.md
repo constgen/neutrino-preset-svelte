@@ -22,7 +22,7 @@
 ## Requirements
 
 - Node.js v6.9+
-- Neutrino v6
+- Neutrino v7
 
 ## Installation
 
