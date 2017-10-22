@@ -1,6 +1,6 @@
 {
 	"name": "neutrino-preset-svelte",
-	"version": "3.0.1",
+	"version": "4.0.0",
 	"description": "Neutrino preset for Svelte applications",
 	"main": "src/index.js",
 	"author": "Constantine Genchevsky <const.gen@gmail.com>",
@@ -22,40 +22,40 @@
 		"lint": "eslint --ext .js src/ "
 	},
 	"dependencies": {
-		"svelte": "~1.40.0",
-		"neutrino-middleware-svelte-loader": "~3.1.0",
-		"neutrino-middleware-chunk": "~6.2.0",
-		"neutrino-middleware-clean": "~6.1.5",
-		"neutrino-middleware-copy": "~6.2.0",
-		"neutrino-middleware-minify": "~6.1.5",
-		"neutrino-middleware-style-loader": "~6.2.0",
-		"neutrino-middleware-font-loader": "~6.1.5",
-		"neutrino-middleware-image-loader": "~6.2.0",
-		"neutrino-middleware-env": "~6.1.5",
-		"neutrino-middleware-hot": "~6.2.0",
+		"svelte": "~1.41.1",
+		"neutrino-middleware-svelte-loader": "~4.0.0",
+		"neutrino-middleware-chunk": "~7.2.1",
+		"neutrino-middleware-clean": "~7.2.1",
+		"neutrino-middleware-copy": "~7.2.1",
+		"neutrino-middleware-minify": "~7.2.1",
+		"neutrino-middleware-style-loader": "~7.2.1",
+		"neutrino-middleware-font-loader": "~7.2.1",
+		"neutrino-middleware-image-loader": "~7.2.1",
+		"neutrino-middleware-env": "~7.2.1",
+		"neutrino-middleware-hot": "~7.2.1",
 		"babel-polyfill": "6.23.0",
 		"core-js": "^2.4.0",
 		"deepmerge": "~2.0.0",
 		"arrify": "~1.0.1",
 		"opn": "~5.1.0",
-		"babel-loader": "~7.1.1",
-		"babel-preset-env": "~1.6.0",
+		"babel-loader": "~7.1.2",
+		"babel-preset-env": "~1.6.1",
 		"babel-plugin-syntax-dynamic-import": "~6.18.0",
 		"babel-plugin-transform-object-rest-spread": "~6.26.0",
 		"babel-plugin-transform-class-properties": "~6.24.1",
 		"html-webpack-plugin": "~2.30.1",
 		"script-ext-html-webpack-plugin": "~1.8.5",
 		"progress-bar-webpack-plugin": "~1.10.0",
-		"webpack": "^3.4.1",
-		"webpack-dev-server": "2.9.0",
-		"eslint-plugin-html": "~3.2.0",
+		"webpack": "^3.8.1",
+		"webpack-dev-server": "2.9.3",
+		"eslint-plugin-html": "~3.2.2",
 		"ip": "~1.1.5"
 	},
 	"devDependencies": {
-		"eslint": "^4.4.0"
+		"eslint": "^4.9.0"
 	},
 	"peerDependencies": {
-		"neutrino": "^6.0.0"
+		"neutrino": "^7.0.0"
 	},
 	"files": [
 		"src/*",
