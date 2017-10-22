@@ -51,7 +51,7 @@ module.exports = function (neutrino, options = {}) {
 				let port = devServer.get('port')
 				let localHost = host === '0.0.0.0' ? publicHost : host
 
-				opn(`${protocol}://${localHost}:${port}`)
+				opn(`${protocol}://${localHost}:${port}`, { wait: false })
 			})
 		})
 		.end()
