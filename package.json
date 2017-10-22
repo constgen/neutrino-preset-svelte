@@ -4,7 +4,7 @@
 	"description": "Neutrino preset for Svelte applications",
 	"main": "src/index.js",
 	"author": "Constantine Genchevsky <const.gen@gmail.com>",
-	"license": "MIT",
+	"license": "GPL-3.0",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/constgen/neutrino-preset-svelte.git"
