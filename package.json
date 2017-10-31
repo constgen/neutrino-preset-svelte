@@ -32,7 +32,7 @@
 		"neutrino-middleware-font-loader": "~7.2.1",
 		"neutrino-middleware-image-loader": "~7.2.1",
 		"neutrino-middleware-env": "~7.2.1",
-		"neutrino-middleware-hot": "~7.2.1",
+		"neutrino-middleware-hot": "~7.3.0",
 		"babel-polyfill": "6.23.0",
 		"core-js": "^2.4.0",
 		"deepmerge": "~2.0.0",
