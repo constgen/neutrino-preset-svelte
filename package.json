@@ -29,7 +29,7 @@
 		"neutrino-middleware-copy": "~7.2.1",
 		"neutrino-middleware-minify": "~7.2.1",
 		"neutrino-middleware-style-loader": "~7.2.1",
-		"neutrino-middleware-font-loader": "~7.2.1",
+		"neutrino-middleware-font-loader": "~7.3.0",
 		"neutrino-middleware-image-loader": "~7.2.1",
 		"neutrino-middleware-env": "~7.2.1",
 		"neutrino-middleware-hot": "~7.2.1",
