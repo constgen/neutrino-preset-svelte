@@ -99,7 +99,7 @@ module.exports = function (neutrino, options = {}) {
 		neutrino.use(chunk)
 	}
 	if (devRun) {
-		neutrino.use(devServer, merge({ public: true }, options.server))
+		neutrino.use(devServer, merge({ public: true }, options.server || {}))
 	}
 	else {
 		neutrino.use(progress)
