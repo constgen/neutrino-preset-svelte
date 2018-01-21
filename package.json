@@ -23,7 +23,7 @@
 	},
 	"dependencies": {
 		"svelte": "~1.41.1",
-		"neutrino-middleware-svelte-loader": "~4.0.0",
+		"neutrino-middleware-svelte-loader": "~4.1.0",
 		"neutrino-middleware-chunk": "~7.2.1",
 		"neutrino-middleware-clean": "~7.2.1",
 		"neutrino-middleware-copy": "~7.2.1",
