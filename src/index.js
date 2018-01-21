@@ -2,15 +2,15 @@
 
 let path = require('path')
 let svelte = require('neutrino-middleware-svelte-loader')
-let chunk = require('neutrino-middleware-chunk')
-let clean = require('neutrino-middleware-clean')
-let copy = require('neutrino-middleware-copy')
-let minify = require('neutrino-middleware-minify')
-let styleLoader = require('neutrino-middleware-style-loader')
-let fontLoader = require('neutrino-middleware-font-loader')
-let imageLoader = require('neutrino-middleware-image-loader')
-let env = require('neutrino-middleware-env')
-let merge = require('deepmerge')
+let chunk = require('@neutrinojs/chunk')
+let clean = require('@neutrinojs/clean')
+let copy = require('@neutrinojs/copy')
+let minify = require('@neutrinojs/minify')
+let styleLoader = require('@neutrinojs/style-loader')
+let fontLoader = require('@neutrinojs/font-loader')
+let imageLoader = require('@neutrinojs/image-loader')
+let env = require('@neutrinojs/env')
+let deepmerge = require('deepmerge')
 let arrify = require('arrify')
 
 let devServer = require('./dev-server.js')
@@ -28,6 +28,13 @@ module.exports = function (neutrino, options = {}) {
 	let lintRule = config.module.rules.get('lint')
 	let eslintLoader = lintRule && lintRule.uses.get('eslint')
 	let lintExtensions = arrify(lintRule && lintRule.get('test')).concat(LOADER_EXTENSIONS)
+	let staticDirPath = path.join(neutrino.options.source, 'static')
+
+	function mergeWith(options = {}){
+		return function(opts = {}){
+			return deepmerge(opts, options)
+		}
+	}
 
 	config
 		.devtool(devRun ? 'eval-source-map' : 'source-map')
@@ -37,13 +44,13 @@ module.exports = function (neutrino, options = {}) {
 			.add(require.resolve('./polyfills.js'))
 			.end()
 		.entry('index')
-			.add(neutrino.options.entry)
+			.add(neutrino.options.mains.index)
 			.end()
 		.output
 			.path(neutrino.options.output)
 			.publicPath('./')
 			.filename('[name].bundle.js')
-			.chunkFilename('[id].[chunkhash].js')
+			.chunkFilename('[name].[chunkhash].js')
 			.end()
 		.resolve.extensions
 			.add('.js')
@@ -83,6 +90,9 @@ module.exports = function (neutrino, options = {}) {
 			neutrino.options.tests,
 			require.resolve('./polyfills.js')
 		],
+		exclude: [
+			staticDirPath
+		],
 		targets: {
 			browsers: options.browsers
 		}
@@ -98,8 +108,9 @@ module.exports = function (neutrino, options = {}) {
 	if (!testRun) {
 		neutrino.use(chunk)
 	}
+
 	if (devRun) {
-		neutrino.use(devServer, merge({ public: true }, options.server || {}))
+		neutrino.use(devServer, deepmerge({ public: true }, options.server || {}))
 	}
 	else {
 		neutrino.use(progress)
@@ -107,9 +118,9 @@ module.exports = function (neutrino, options = {}) {
 		neutrino.use(minify)
 		neutrino.use(copy, {
 			patterns: [{
-				context: neutrino.options.static,
+				context: staticDirPath,
 				from: '**/*',
-				to: path.basename(neutrino.options.static)
+				to: path.basename(staticDirPath)
 			}]
 		})
 		config.output.filename('[name].[chunkhash].bundle.js')
@@ -119,14 +130,14 @@ module.exports = function (neutrino, options = {}) {
 		lintRule
 			.pre()
 		eslintLoader
-			.tap(options => merge(options, {
+			.tap(mergeWith({
 				parserOptions: {
 					ecmaFeatures: {
 						experimentalObjectRestSpread: true
 					}
 				}
 			}))
-			.tap(options => merge(options, {
+			.tap(mergeWith(options, {
 				envs: ['browser', 'commonjs']
 			}))
 	}
@@ -136,7 +147,7 @@ module.exports = function (neutrino, options = {}) {
 			.pre()
 			.test(lintExtensions)
 		eslintLoader
-			.tap(options => merge(options, {
+			.tap(mergeWith(options, {
 				plugins: ['html'],
 				settings: {
 					'html/html-extensions': ['.html', '.htm', '.svelte', '.svlt']

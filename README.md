@@ -22,7 +22,7 @@
 ## Requirements
 
 - Node.js v6.9+
-- Neutrino v7
+- Neutrino v8
 
 ## Installation
 
@@ -216,9 +216,9 @@ The following is a list of rules and their identifiers which can be overridden:
 The following is a list of plugins and their identifiers which can be overridden:
 
 - `env`: Injects the value of NODE_ENV into the application as process.env.NODE_ENV;
-- `html`: Creates HTML files when building. Has various options that can be configured via package.json;
+- `html`: Creates HTML files when building.
 - `html-defer`: Adds `defer` attribute to `<script>` tags in HTML files when building;
-- `chunk`: Defines chunks for manifest and vendor entry points. Can be configured via package.json;
+- `chunk`: Defines chunks for manifest and vendor entry points.
 - `hot`: Enables hot module reloading;
 - `clean`: Clears the contents of build prior to creating a production bundle;
 - `copy`: Copies files during build, defaults from `src/static` to `build/static`.
@@ -227,8 +227,7 @@ The following is a list of plugins and their identifiers which can be overridden
 ### Override configuration
 
 By following the [customization guide](https://neutrino.js.org/customization) and knowing the rule, loader, and plugin IDs above,
-you can override and augment the build by providing a function to your `.neutrinorc.js` use array. You can also
-make these changes from the Neutrino API in custom middleware.
+you can override and augment the build by providing a function to your `.neutrinorc.js` use array. You can also make these changes from the Neutrino API in a custom middleware.
 
 #### Vendoring
 

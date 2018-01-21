@@ -2,7 +2,7 @@
 
 let arrify = require('arrify')
 let path = require('path')
-let merge = require('deepmerge')
+let deepmerge = require('deepmerge')
 
 module.exports = function (neutrino, options = {}) {
 	const NODE_MODULES = path.resolve(__dirname, '../node_modules')
@@ -41,7 +41,7 @@ module.exports = function (neutrino, options = {}) {
 			.end()
 		.use('babel')
 			.loader(require.resolve('babel-loader'))
-			.tap((opts = {}) => merge(opts, {
+			.tap((opts = {}) => deepmerge(opts, {
 				presets: [
 					[require.resolve('babel-preset-env'), {
 						debug: false,

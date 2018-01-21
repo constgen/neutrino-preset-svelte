@@ -1,7 +1,7 @@
 'use strict'
 
 let opn = require('opn')
-let hot = require('neutrino-middleware-hot')
+let hot = require('@neutrinojs/hot')
 let ip = require('ip')
 
 module.exports = function (neutrino, options = {}) {
@@ -27,7 +27,7 @@ module.exports = function (neutrino, options = {}) {
 		.headers({
 			host: publicHost
 		})
-						.public(publicHost) //.public(`${publicHost}:${port}`)
+		.public(publicHost) //.public(`${publicHost}:${port}`)
 		.publicPath('/')
 		.stats({
 			assets: false,
