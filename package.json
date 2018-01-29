@@ -32,7 +32,7 @@
 		"@neutrinojs/font-loader": "~8.0.18",
 		"@neutrinojs/image-loader": "~8.0.18",
 		"@neutrinojs/env": "~8.0.18",
-		"@neutrinojs/hot": "~8.0.18",
+		"@neutrinojs/hot": "~8.1.0",
 		"babel-polyfill": "6.26.0",
 		"core-js": "^2.5.0",
 		"deepmerge": "~2.0.1",
