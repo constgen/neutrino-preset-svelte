@@ -31,7 +31,7 @@
 		"@neutrinojs/style-loader": "~8.0.18",
 		"@neutrinojs/font-loader": "~8.0.18",
 		"@neutrinojs/image-loader": "~8.0.18",
-		"@neutrinojs/env": "~8.0.18",
+		"@neutrinojs/env": "~8.1.0",
 		"@neutrinojs/hot": "~8.0.18",
 		"babel-polyfill": "6.26.0",
 		"core-js": "^2.5.0",
