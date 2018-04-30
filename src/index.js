@@ -1,7 +1,7 @@
 'use strict'
 
 let path = require('path')
-let svelte = require('neutrino-middleware-svelte-loader')
+let svelteLoader = require('neutrino-middleware-svelte-loader')
 let chunk = require('@neutrinojs/chunk')
 let clean = require('@neutrinojs/clean')
 let copy = require('@neutrinojs/copy')
@@ -30,7 +30,7 @@ module.exports = function (neutrino, options = {}) {
 	let lintExtensions = arrify(lintRule && lintRule.get('test')).concat(LOADER_EXTENSIONS)
 	let staticDirPath = path.join(neutrino.options.source, 'static')
 
-	function mergeWith(options = {}){
+	function merge(options = {}){
 		return function(opts = {}){
 			return deepmerge(opts, options)
 		}
@@ -97,7 +97,7 @@ module.exports = function (neutrino, options = {}) {
 			browsers: options.browsers
 		}
 	})
-	neutrino.use(svelte, {
+	neutrino.use(svelteLoader, {
 		include: [neutrino.options.source, neutrino.options.tests]
 	})
 	neutrino.use(htmlTemplate, options.html)
@@ -130,14 +130,14 @@ module.exports = function (neutrino, options = {}) {
 		lintRule
 			.pre()
 		eslintLoader
-			.tap(mergeWith({
+			.tap(merge({
 				parserOptions: {
 					ecmaFeatures: {
 						experimentalObjectRestSpread: true
 					}
 				}
 			}))
-			.tap(mergeWith(options, {
+			.tap(merge({
 				envs: ['browser', 'commonjs']
 			}))
 	}
@@ -147,7 +147,7 @@ module.exports = function (neutrino, options = {}) {
 			.pre()
 			.test(lintExtensions)
 		eslintLoader
-			.tap(mergeWith(options, {
+			.tap(merge({
 				plugins: ['html'],
 				settings: {
 					'html/html-extensions': ['.html', '.htm', '.svelte', '.svlt']
