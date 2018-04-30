@@ -40,7 +40,7 @@ Don't install Svelte in your project because it is already included to the prese
 
 ## Quickstart
 
-After installing Neutrino and the Svelte preset, add a new directory named `src` in the root of the project, with a single JS file named `index.js` in it. You can mound you application to the document `<body>`. Edit your `src/index.js` file with the following:
+After installing Neutrino and the Svelte preset, add a new directory named `src` in the root of the project, with a single JS file named `index.js` in it. You can mount you application to the document `<body>`. Edit your `src/index.js` file with the following:
 
 ```js
 import Main from './main.html'
@@ -51,7 +51,7 @@ new Main({
 })
 ```
 
-You can change this code base to better match your needs.
+You can change this code base to better match your needs. Create `main.html` Svelte component with any markup and `common.css` with your global styles.
 
 Now edit your project's `package.json` to add commands for starting and building the application:
 
@@ -77,11 +77,11 @@ Start the app.
 
 ```
 ❯ npm start
-✔ Development server running on: http://0.0.0.0:5000
+✔ Development server running on: http://192.168.31.5:5000
 ✔ Build completed
 ```
 
-The console shows that application started at "http://0.0.0.0:5000". This is a way how `webpack-dev-server` starts in both "localhost:5000" and local network IP address (e.g. "http://192.168.1.100:5000"). External IP may be useful for mobile development. The preset tries to automatically start (if not disabled in [custom options](#preset-options)) a browser with the URL of the server IP address (if not changed in [custom options](#preset-options)).
+The console shows that application started at "http://192.168.31.5:5000". But `webpack-dev-server` starts in both "localhost:5000" and local network IP address (e.g. "http://192.168.1.100:5000"). External IP may be useful for mobile development. The preset tries to automatically start (if not disabled in [custom options](#preset-options)) a browser with the URL of the server IP address (if not changed in [custom options](#preset-options)).
 
 ## Building
 
@@ -99,7 +99,7 @@ If you wish to copy files to the build directory that are not imported from appl
 
 ## Hot Reloading
 
-`neutrino-preset-svelte` supports Hot Reloading of files that was changed. Hot Module Replacement is supported only in CSS files. This means that changing of CSS will rerender only a part of styles, and changing of the rest of modules will reload the page.
+`neutrino-preset-svelte` supports Hot Reloading of files that was changed. Hot Module Replacement is supported only in CSS files. This means that changing of CSS will re-render only a part of styles, and changing of the rest of modules will reload the page.
 
 <!--Using dynamic imports with `import()` will automatically create split points and hot replace those modules upon modification during development.-->
 
@@ -215,7 +215,7 @@ The following is a list of rules and their identifiers which can be overridden:
 
 The following is a list of plugins and their identifiers which can be overridden:
 
-- `env`: Injects the value of NODE_ENV into the application as process.env.NODE_ENV;
+- `env`: Injects the value of NODE_ENV into the application as `process.env.NODE_ENV`;
 - `html`: Creates HTML files when building.
 - `html-defer`: Adds `defer` attribute to `<script>` tags in HTML files when building;
 - `chunk`: Defines chunks for manifest and vendor entry points.
