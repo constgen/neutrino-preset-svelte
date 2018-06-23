@@ -52,7 +52,7 @@
 		"ip": "~1.1.5"
 	},
 	"devDependencies": {
-		"eslint": "^4.16.0"
+		"eslint": "^5.0.0"
 	},
 	"peerDependencies": {
 		"neutrino": "^8.0.0"
