@@ -30,7 +30,7 @@
 		"@neutrinojs/minify": "~8.1.0",
 		"@neutrinojs/style-loader": "~8.0.18",
 		"@neutrinojs/font-loader": "~8.1.0",
-		"@neutrinojs/image-loader": "~8.0.18",
+		"@neutrinojs/image-loader": "~8.3.0",
 		"@neutrinojs/env": "~8.0.18",
 		"@neutrinojs/hot": "~8.0.18",
 		"babel-polyfill": "6.26.0",
