@@ -11,15 +11,19 @@ let fontLoader = require('@neutrinojs/font-loader')
 let imageLoader = require('@neutrinojs/image-loader')
 let env = require('@neutrinojs/env')
 let deepmerge = require('deepmerge')
-let arrify = require('arrify')
 
 let devServer = require('./dev-server.js')
 let babel = require('./babel.js')
 let progress = require('./progress.js')
 let htmlTemplate = require('./html-template.js')
 
+function merge(options = {}){
+	return function(opts = {}){
+		return deepmerge(opts, options)
+	}
+}
+
 module.exports = function (neutrino, options = {}) {
-	const LOADER_EXTENSIONS = /\.(html?|svelte|svlt)$/
 	const NODE_MODULES = path.resolve(__dirname, '../node_modules')
 	const PROJECT_NODE_MODULES = path.resolve(process.cwd(), 'node_modules')
 	let config = neutrino.config
@@ -27,14 +31,7 @@ module.exports = function (neutrino, options = {}) {
 	let devRun = (process.env.NODE_ENV === 'development')
 	let lintRule = config.module.rules.get('lint')
 	let eslintLoader = lintRule && lintRule.uses.get('eslint')
-	let lintExtensions = arrify(lintRule && lintRule.get('test')).concat(LOADER_EXTENSIONS)
 	let staticDirPath = path.join(neutrino.options.source, 'static')
-
-	function merge(options = {}){
-		return function(opts = {}){
-			return deepmerge(opts, options)
-		}
-	}
 
 	config
 		.devtool(devRun ? 'eval-source-map' : 'source-map')
@@ -140,20 +137,6 @@ module.exports = function (neutrino, options = {}) {
 			.tap(merge({
 				envs: ['browser', 'commonjs']
 			}))
-	}
-
-	if (eslintLoader) {
-		lintRule
-			.pre()
-			.test(lintExtensions)
-		eslintLoader
-			.tap(merge({
-				plugins: ['html'],
-				settings: {
-					'html/html-extensions': ['.html', '.htm', '.svelte', '.svlt']
-				}
-			}))
-			.end()
 	}
 
 	// console.log(config.toConfig().module.rules)
