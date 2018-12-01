@@ -18,8 +18,8 @@
 		"webpack"
 	],
 	"scripts": {
-		"test": "npm run lint",
-		"lint": "eslint --ext .js src/"
+		"pretest": "neutrino lint",
+		"lint": "neutrino lint --fix"
 	},
 	"dependencies": {
 		"svelte": "~1.60.3",
@@ -52,7 +52,8 @@
 		"ip": "~1.1.5"
 	},
 	"devDependencies": {
-		"eslint": "^4.16.0"
+		"neutrino": "8.3.0",
+		"@atomspace/eslint": "2.3.0"
 	},
 	"peerDependencies": {
 		"neutrino": "^8.0.0"

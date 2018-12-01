@@ -1,0 +1,29 @@
+{
+	"editor.insertSpaces": false,
+   "editor.detectIndentation": false,
+   "jshint.enable": false,
+   "eslint.enable": true,
+   "eslint.autoFixOnSave": true,
+   "editor.formatOnSave": false,
+   "javascript.format.enable": true,
+   "javascript.validate.enable": false,
+   "files.eol": "\n",
+   "files.insertFinalNewline": false,
+   "[markdown]": {
+      "editor.tabSize": 3,
+      "editor.insertSpaces": true
+   },
+   "eslint.options": {
+      "extensions": [".js", ".md"]
+   },
+   "eslint.validate": [
+      {
+         "language": "javascript",
+         "autoFix": true
+      },
+      {
+         "language": "markdown",
+         "autoFix": true
+      }
+   ]
+}

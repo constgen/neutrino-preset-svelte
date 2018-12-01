@@ -28,7 +28,7 @@
 
 `neutrino-preset-svelte` can be installed from NPM. Make sure `neutrino`, and `neutrino-preset-svelte` are development dependencies in your project. `svelte` is installed as an internal dependency of `neutrino-preset-svelte`
 
-```
+```bash
 ❯ npm install --save-dev neutrino neutrino-preset-svelte
 ```
 
@@ -43,12 +43,12 @@ Don't install Svelte in your project because it is already included to the prese
 After installing Neutrino and the Svelte preset, add a new directory named `src` in the root of the project, with a single JS file named `index.js` in it. You can mount you application to the document `<body>`. Edit your `src/index.js` file with the following:
 
 ```js
-import Main from './main.html'
-import './common.css'
+import Main from './main.html';
+import './common.css';
 
 new Main({
-  target: document.body
-})
+   target: document.body
+});
 ```
 
 You can change this code base to better match your needs. Create `main.html` Svelte component with any markup and `common.css` with your global styles.
@@ -63,19 +63,20 @@ Now edit your project's `package.json` to add commands for starting and building
   }
 }
 ```
+
 And add the new file `.neutrinorc.js` in the root of the project:
 
 ```js
 module.exports = {
-  use: [
-    'neutrino-preset-svelte'
-  ]
-}
+   use: [
+      'neutrino-preset-svelte'
+   ]
+};
 ```
 
-Start the app. 
+Start the app.
 
-```
+```bash
 ❯ npm start
 ✔ Development server running on: http://192.168.31.5:5000
 ✔ Build completed
@@ -85,9 +86,9 @@ The console shows that application started at "http://192.168.31.5:5000". But `w
 
 ## Building
 
-`neutrino-preset-svelte` builds static assets to the `build` directory by default when running `neutrino build`. 
+`neutrino-preset-svelte` builds static assets to the `build` directory by default when running `neutrino build`.
 
-```
+```bash
 ❯ npm run build
 ```
 
@@ -111,79 +112,81 @@ an array pair instead of a string to supply these options in `.neutrinorc.js`.
 
 The following shows how you can pass an options object to the preset and override its options, showing the defaults:
 
-**.neutrinorc.js**
+#### .neutrinorc.js
+
 ```js
 module.exports = {
-  use: [
-    ['neutrino-preset-svelte', {
-      // options related to generating the HTML document
-      html: {
-        title: `${name} ${version}`,
-        filename: 'index.html',
-        template: path.resolve(__dirname, 'template.ejs'),
-        inject: 'head',
-        mobile: true,
-        minify: {
-          collapseWhitespace: true, 
-          preserveLineBreaks: true
-        }
-      },
+   use: [
+      ['neutrino-preset-svelte', {
+         // options related to generating the HTML document
+         html: {
+            title: `${name} ${version}`,
+            filename: 'index.html',
+            template: path.resolve(__dirname, 'template.ejs'),
+            inject: 'head',
+            mobile: true,
+            minify: {
+               collapseWhitespace: true,
+               preserveLineBreaks: true
+            }
+         },
 
-      // options related to a development server
-      server: {
-        https: false,
-        public: true,
-        port: 5000,
-        open: true,
-        contentBase: neutrino.options.source
-      },
+         // options related to a development server
+         server: {
+            https: false,
+            public: true,
+            port: 5000,
+            open: true,
+            contentBase: neutrino.options.source
+         },
 
-      // supported browsers in a Browser List format
-      browsers: [
-        'last 3 chrome versions',
-        'last 3 firefox versions',
-        'last 3 edge versions',
-        'last 3 opera versions',
-        'last 3 safari versions',
-        'last 1 ie version',
-        'last 1 ie_mob version',
-        'last 1 blackberry version',
-        'last 3 and_chr versions',
-        'last 3 and_ff versions',
-        'last 3 op_mob versions',
-        'last 2 op_mini versions',
-        'ios >= 8',
-        'android >= 4'
-      ]
-    }]
-  ]
+         // supported browsers in a Browser List format
+         browsers: [
+            'last 3 chrome versions',
+            'last 3 firefox versions',
+            'last 3 edge versions',
+            'last 3 opera versions',
+            'last 3 safari versions',
+            'last 1 ie version',
+            'last 1 ie_mob version',
+            'last 1 blackberry version',
+            'last 3 and_chr versions',
+            'last 3 and_ff versions',
+            'last 3 op_mob versions',
+            'last 2 op_mini versions',
+            'ios >= 8',
+            'android >= 4'
+         ]
+      }]
+   ]
 };
 ```
 
 *Example: Enable HTTPS, disable auto-opening of a browser, change the page title, define supported browsers:*
 
-**.neutrinorc.js**
+#### .neutrinorc.js
+
 ```js
 module.exports = {
-  use: [
-    ['neutrino-preset-svelte', {
-      // Example: disable Hot Module Replacement
-      server: {
-        https: true,
-        open: false
-      },
+   use: [
+      ['neutrino-preset-svelte', {
+         // Example: disable Hot Module Replacement
+         server: {
+            https: true,
+            open: false
+         },
 
-      // Example: change the page title
-      html: {
-        title: 'Svelte App'
-      },
+         // Example: change the page title
+         html: {
+            title: 'Svelte App'
+         },
 
-      // Example: change supported browsers
-      browsers: [
-        'last 3 versions'
-      ]
-    }]
-  ]
+         // Example: change supported browsers
+         browsers: [
+            'last 3 versions'
+         ]
+      }]
+   ]
 };
 ```
 
@@ -222,6 +225,7 @@ The following is a list of plugins and their identifiers which can be overridden
 - `hot`: Enables hot module reloading;
 - `clean`: Clears the contents of build prior to creating a production bundle;
 - `copy`: Copies files during build, defaults from `src/static` to `build/static`.
+
 <!--- `progress`: Displays a progress bar when using neutrino build.-->
 
 ### Override configuration
@@ -236,12 +240,13 @@ from your application code.
 
 _Example: Put lodash into a separate "vendor" chunk:_
 
-**.neutrinorc.js**
+#### .neutrinorc.js
+
 ```js
 module.exports = {
-  use: [
-    'neutrino-preset-svelte',
-    neutrino => neutrino.config.entry('vendor').add('lodash')
-  ]
-}
+   use: [
+      'neutrino-preset-svelte',
+      neutrino => neutrino.config.entry('vendor').add('lodash')
+   ]
+};
 ```

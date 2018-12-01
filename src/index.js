@@ -1,37 +1,43 @@
-'use strict'
+let path = require('path');
 
-let path = require('path')
-let svelteLoader = require('neutrino-middleware-svelte-loader')
-let chunk = require('@neutrinojs/chunk')
-let clean = require('@neutrinojs/clean')
-let copy = require('@neutrinojs/copy')
-let minify = require('@neutrinojs/minify')
-let styleLoader = require('@neutrinojs/style-loader')
-let fontLoader = require('@neutrinojs/font-loader')
-let imageLoader = require('@neutrinojs/image-loader')
-let env = require('@neutrinojs/env')
-let deepmerge = require('deepmerge')
+let svelteLoader = require('neutrino-middleware-svelte-loader');
+let chunk = require('@neutrinojs/chunk');
+let clean = require('@neutrinojs/clean');
+let copy = require('@neutrinojs/copy');
+let minify = require('@neutrinojs/minify');
+let styleLoader = require('@neutrinojs/style-loader');
+let fontLoader = require('@neutrinojs/font-loader');
+let imageLoader = require('@neutrinojs/image-loader');
+let env = require('@neutrinojs/env');
+let deepmerge = require('deepmerge');
 
-let devServer = require('./dev-server.js')
-let babel = require('./babel.js')
-let progress = require('./progress.js')
-let htmlTemplate = require('./html-template.js')
+let devServer = require('./dev-server');
+let babel = require('./babel');
+let progress = require('./progress');
+let htmlTemplate = require('./html-template');
 
-function merge(options = {}){
-	return function(opts = {}){
-		return deepmerge(opts, options)
-	}
+function merge (options = {}) {
+	return function (opts = {}) {
+		return deepmerge(opts, options);
+	};
 }
 
 module.exports = function (neutrino, options = {}) {
-	const NODE_MODULES = path.resolve(__dirname, '../node_modules')
-	const PROJECT_NODE_MODULES = path.resolve(process.cwd(), 'node_modules')
-	let config = neutrino.config
-	let testRun = (process.env.NODE_ENV === 'test')
-	let devRun = (process.env.NODE_ENV === 'development')
-	let lintRule = config.module.rules.get('lint')
-	let eslintLoader = lintRule && lintRule.uses.get('eslint')
-	let staticDirPath = path.join(neutrino.options.source, 'static')
+	const NODE_MODULES = path.resolve(__dirname, '../node_modules');
+	const PROJECT_NODE_MODULES = path.resolve(process.cwd(), 'node_modules');
+	let config = neutrino.config;
+	let testRun = (process.env.NODE_ENV === 'test');
+	let devRun = (process.env.NODE_ENV === 'development');
+	let lintRule = config.module.rules.get('lint');
+	let eslintLoader = lintRule && lintRule.uses.get('eslint');
+	let staticDirPath = path.join(neutrino.options.source, 'static');
+	// let neutrinoExtensions = neutrino.options.extensions;
+
+	// function isNotInExtensions (extension) {
+	// 	return neutrinoExtensions.indexOf(extension) < 0;
+	// }
+
+	// neutrino.options.extensions = neutrinoExtensions.concat(['html', 'htm', 'md'].filter(isNotInExtensions));
 
 	config
 		.devtool(devRun ? 'eval-source-map' : 'source-map')
@@ -54,6 +60,7 @@ module.exports = function (neutrino, options = {}) {
 			.add('.json')
 			.end().end()
 		.resolve.alias
+
 			// Make sure 2 versions of "core-js" always match in package.json and babel-polyfill/package.json
 			.set('core-js', path.dirname(require.resolve('core-js')))
 			.end().end()
@@ -78,9 +85,9 @@ module.exports = function (neutrino, options = {}) {
 			.set('setImmediate', true)
 			.set('fs', 'empty')
 			.set('tls', 'empty')
-			.end()
+			.end();
 
-	neutrino.use(env)
+	neutrino.use(env);
 	neutrino.use(babel, {
 		include: [
 			neutrino.options.source,
@@ -93,51 +100,44 @@ module.exports = function (neutrino, options = {}) {
 		targets: {
 			browsers: options.browsers
 		}
-	})
+	});
 	neutrino.use(svelteLoader, {
 		include: [neutrino.options.source, neutrino.options.tests]
-	})
-	neutrino.use(htmlTemplate, options.html)
-	neutrino.use(styleLoader)
-	neutrino.use(fontLoader)
-	neutrino.use(imageLoader)
+	});
+	neutrino.use(htmlTemplate, options.html);
+	neutrino.use(styleLoader);
+	neutrino.use(fontLoader);
+	neutrino.use(imageLoader);
 
 	if (!testRun) {
-		neutrino.use(chunk)
+		neutrino.use(chunk);
 	}
 
 	if (devRun) {
-		neutrino.use(devServer, deepmerge({ public: true }, options.server || {}))
+		neutrino.use(devServer, deepmerge({ public: true }, options.server || {}));
 	}
 	else {
-		neutrino.use(progress)
-		neutrino.use(clean, { paths: [neutrino.options.output] })
-		neutrino.use(minify)
+		neutrino.use(progress);
+		neutrino.use(clean, { paths: [neutrino.options.output] });
+		neutrino.use(minify);
 		neutrino.use(copy, {
 			patterns: [{
 				context: staticDirPath,
 				from: '**/*',
 				to: path.basename(staticDirPath)
 			}]
-		})
-		config.output.filename('[name].[chunkhash].bundle.js')
+		});
+		config.output.filename('[name].[chunkhash].bundle.js');
 	}
 
 	if (eslintLoader) {
-		lintRule
-			.pre()
 		eslintLoader
 			.tap(merge({
-				parserOptions: {
-					ecmaFeatures: {
-						experimentalObjectRestSpread: true
-					}
-				}
-			}))
-			.tap(merge({
 				envs: ['browser', 'commonjs']
-			}))
+			}));
 	}
 
+	// console.log(neutrino.options.extensions);
+
 	// console.log(config.toConfig().module.rules)
-}
+};
