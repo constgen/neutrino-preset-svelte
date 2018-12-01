@@ -4,30 +4,27 @@ let opn = require('opn')
 let hot = require('@neutrinojs/hot')
 let ip = require('ip')
 
-module.exports = function (neutrino, options = {}) {
-	neutrino.use(hot)
-
+module.exports = function (neutrino, settings = {}) {
 	let config = neutrino.config
-	let https = options.https
-	let protocol = https ? 'https' : 'http'
-	let port = options.port || 5000
-	let serverPublic = options.public !== undefined ? Boolean(options.public) : false
-	let host = serverPublic ? '0.0.0.0' : 'localhost'
-	let openInBrowser = options.open !== undefined ? Boolean(options.open) : true
-	let contentBase = options.contentBase || neutrino.options.source
+	let https = Boolean(settings.https)
+	let port = Number(settings.port || 5000)
+	let serverIsPublic = settings.public === undefined ? false : Boolean(settings.public)
+	let host = serverIsPublic ? '0.0.0.0' : 'localhost'
+	let toOpenInBrowser = settings.open === undefined ? true : Boolean(settings.open)
 	let publicHost = ip.address('public', 'ipv4')
+	let livereload = settings.hot === undefined ? true : Boolean(settings.hot)
 
 	config.devServer
 		.host(host)
-		.port(Number(port))
-		.https(Boolean(https))
-		.contentBase(contentBase)
+		.port(port)
+		.https(https)
+		.contentBase(neutrino.options.source)
 		.historyApiFallback(true)
-		.hot(true)
+		.hot(livereload)
 		.headers({
 			host: publicHost
 		})
-		.public(publicHost) //.public(`${publicHost}:${port}`)
+		.public(publicHost)
 		.publicPath('/')
 		.stats({
 			assets: false,
@@ -43,7 +40,7 @@ module.exports = function (neutrino, options = {}) {
 			version: false,
 			warnings: true
 		})
-		.when(openInBrowser, function (devServer) {
+		.when(toOpenInBrowser, function (devServer) {
 			neutrino.on('start', function () {
 				let https = devServer.get('https')
 				let protocol = https ? 'https' : 'http'
@@ -55,7 +52,17 @@ module.exports = function (neutrino, options = {}) {
 			})
 		})
 		.end()
-	.entry('index')
-		.prepend(require.resolve('webpack/hot/dev-server'))
-		.prepend(`${require.resolve('webpack-dev-server/client')}?${protocol}://${host}:${port}`)
+	.when(livereload, function(config){
+		let https = config.devServer.get('https')
+		let protocol = https ? 'https' : 'http'
+		let host = config.devServer.get('host')
+		let port = config.devServer.get('port')
+
+		neutrino.use(hot)
+		Object.keys(neutrino.options.mains)
+			.forEach(function (key) {
+				config.entry(key).prepend(require.resolve('webpack/hot/dev-server'))
+				config.entry(key).prepend(`${require.resolve('webpack-dev-server/client')}?${protocol}://${host}:${port}`)
+			})
+	})
 }
