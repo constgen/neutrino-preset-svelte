@@ -25,12 +25,14 @@ function merge (options = {}) {
 module.exports = function (neutrino, options = {}) {
 	const NODE_MODULES = path.resolve(__dirname, '../node_modules');
 	const PROJECT_NODE_MODULES = path.resolve(process.cwd(), 'node_modules');
+	const LAUNCHER_PATH = path.resolve(__dirname, './launcher/launcher.js');
 	let config = neutrino.config;
 	let testRun = (process.env.NODE_ENV === 'test');
-	let devRun = (process.env.NODE_ENV === 'development');
+	let devMode = (process.env.NODE_ENV === 'development');
 	let lintRule = config.module.rules.get('lint');
 	let eslintLoader = lintRule && lintRule.uses.get('eslint');
 	let staticDirPath = path.join(neutrino.options.source, 'static');
+	let useLauncher = true;
 	// let neutrinoExtensions = neutrino.options.extensions;
 
 	// function isNotInExtensions (extension) {
@@ -40,15 +42,16 @@ module.exports = function (neutrino, options = {}) {
 	// neutrino.options.extensions = neutrinoExtensions.concat(['html', 'htm', 'md'].filter(isNotInExtensions));
 
 	config
-		.devtool(devRun ? 'eval-source-map' : 'source-map')
+		.devtool(devMode ? 'eval-source-map' : 'source-map')
 		.target('web')
 		.context(neutrino.options.root)
 		.entry('polyfill')
 			.add(require.resolve('./polyfills.js'))
 			.end()
-		.entry('index')
-			.add(neutrino.options.mains.index)
-			.end()
+
+		// .entry('index')
+		// 	.add(neutrino.options.mains.index)
+		// 	.end()
 		.output
 			.path(neutrino.options.output)
 			.publicPath('./')
@@ -58,6 +61,7 @@ module.exports = function (neutrino, options = {}) {
 		.resolve.extensions
 			.add('.js')
 			.add('.json')
+			.add('.html')
 			.end().end()
 		.resolve.alias
 
@@ -87,6 +91,27 @@ module.exports = function (neutrino, options = {}) {
 			.set('tls', 'empty')
 			.end();
 
+	Object.keys(neutrino.options.mains).forEach(function (key) {
+		neutrino.config
+			.entry(key)
+				.when(useLauncher, function (entry) {
+					let values = entry.values();
+					let lastValue = values[values.length - 1];
+
+					entry.delete(lastValue).add(LAUNCHER_PATH);
+				})
+				.end()
+			.resolve.alias
+				.when(useLauncher, function (alias) {
+					alias.set('__entry__', path.resolve(__dirname, neutrino.options.mains[key]));
+				});
+
+		// .when(useLauncher && devMode, function (alias) {
+		// 	alias.set('webpack/hot/log', require.resolve('webpack/hot/log'));
+		// });
+	});
+
+
 	neutrino.use(env);
 	neutrino.use(babel, {
 		include: [
@@ -113,7 +138,7 @@ module.exports = function (neutrino, options = {}) {
 		neutrino.use(chunk);
 	}
 
-	if (devRun) {
+	if (devMode) {
 		neutrino.use(devServer, deepmerge({ public: true }, options.server || {}));
 	}
 	else {
@@ -133,11 +158,19 @@ module.exports = function (neutrino, options = {}) {
 	if (eslintLoader) {
 		eslintLoader
 			.tap(merge({
-				envs: ['browser', 'commonjs']
+				envs: ['browser', 'commonjs'],
+				overrides: [
+					{
+						files: ['**/*.html'],
+						parserOptions: {
+							sourceType: 'module'
+						}
+					}
+				]
 			}));
 	}
 
 	// console.log(neutrino.options.extensions);
 
-	// console.log(config.toConfig().module.rules)
+	// console.log(config.toConfig())
 };
