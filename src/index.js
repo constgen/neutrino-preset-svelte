@@ -22,7 +22,7 @@ function merge (options = {}) {
 	};
 }
 
-module.exports = function (neutrino, options = {}) {
+module.exports = function (neutrino, customSettings = {}) {
 	const NODE_MODULES = path.resolve(__dirname, '../node_modules');
 	const PROJECT_NODE_MODULES = path.resolve(process.cwd(), 'node_modules');
 	const LAUNCHER_PATH = path.resolve(__dirname, './launcher/launcher.js');
@@ -32,14 +32,29 @@ module.exports = function (neutrino, options = {}) {
 	let lintRule = config.module.rules.get('lint');
 	let eslintLoader = lintRule && lintRule.uses.get('eslint');
 	let staticDirPath = path.join(neutrino.options.source, 'static');
-	let useLauncher = true;
-	// let neutrinoExtensions = neutrino.options.extensions;
-
-	// function isNotInExtensions (extension) {
-	// 	return neutrinoExtensions.indexOf(extension) < 0;
-	// }
-
-	// neutrino.options.extensions = neutrinoExtensions.concat(['html', 'htm', 'md'].filter(isNotInExtensions));
+	let defaultSettings = {
+		launcher: true,
+		browsers: customSettings.browsers ? [] : [
+			'last 3 chrome versions',
+			'last 3 firefox versions',
+			'last 3 edge versions',
+			'last 3 opera versions',
+			'last 3 safari versions',
+			'last 1 ie version',
+			'last 1 ie_mob version',
+			'last 1 blackberry version',
+			'last 3 and_chr versions',
+			'last 3 and_ff versions',
+			'last 3 op_mob versions',
+			'last 2 op_mini versions',
+			'ios >= 8',
+			'android >= 4'
+		],
+		server: {},
+		html: {}
+	};
+	let settings = deepmerge(defaultSettings, customSettings);
+	let useLauncher = Boolean(settings.launcher);
 
 	config
 		.devtool(devMode ? 'eval-source-map' : 'source-map')
@@ -48,10 +63,9 @@ module.exports = function (neutrino, options = {}) {
 		.entry('polyfill')
 			.add(require.resolve('./polyfills.js'))
 			.end()
-
-		// .entry('index')
-		// 	.add(neutrino.options.mains.index)
-		// 	.end()
+		.entry('index')
+			.add(neutrino.options.mains.index)
+			.end()
 		.output
 			.path(neutrino.options.output)
 			.publicPath('./')
@@ -61,7 +75,6 @@ module.exports = function (neutrino, options = {}) {
 		.resolve.extensions
 			.add('.js')
 			.add('.json')
-			.add('.html')
 			.end().end()
 		.resolve.alias
 
@@ -105,31 +118,31 @@ module.exports = function (neutrino, options = {}) {
 				.when(useLauncher, function (alias) {
 					alias.set('__entry__', path.resolve(__dirname, neutrino.options.mains[key]));
 				});
-
-		// .when(useLauncher && devMode, function (alias) {
-		// 	alias.set('webpack/hot/log', require.resolve('webpack/hot/log'));
-		// });
 	});
-
 
 	neutrino.use(env);
 	neutrino.use(babel, {
 		include: [
 			neutrino.options.source,
 			neutrino.options.tests,
-			require.resolve('./polyfills.js')
+			require.resolve('./polyfills.js'),
+			path.resolve(path.dirname(require.resolve('svelte')), './internal.js')
 		],
 		exclude: [
 			staticDirPath
 		],
 		targets: {
-			browsers: options.browsers
+			browsers: settings.browsers
 		}
 	});
 	neutrino.use(svelteLoader, {
-		include: [neutrino.options.source, neutrino.options.tests]
+		include: [neutrino.options.source, neutrino.options.tests],
+		svelte: {
+			// hotReload: true,
+			emitCss: !devMode
+		}
 	});
-	neutrino.use(htmlTemplate, options.html);
+	neutrino.use(htmlTemplate, settings.html);
 	neutrino.use(styleLoader);
 	neutrino.use(fontLoader);
 	neutrino.use(imageLoader);
@@ -139,7 +152,7 @@ module.exports = function (neutrino, options = {}) {
 	}
 
 	if (devMode) {
-		neutrino.use(devServer, deepmerge({ public: true }, options.server || {}));
+		neutrino.use(devServer, deepmerge({ public: true }, settings.server));
 	}
 	else {
 		neutrino.use(progress);
@@ -159,18 +172,20 @@ module.exports = function (neutrino, options = {}) {
 		eslintLoader
 			.tap(merge({
 				envs: ['browser', 'commonjs'],
-				overrides: [
-					{
-						files: ['**/*.html'],
-						parserOptions: {
-							sourceType: 'module'
+				baseConfig: {
+					overrides: [
+						{
+							files: ['**/*.html'],
+							parserOptions: {
+								sourceType: 'module'
+							}
 						}
-					}
-				]
+					]
+				}
 			}));
 	}
 
 	// console.log(neutrino.options.extensions);
-
 	// console.log(config.toConfig())
+	// console.log(JSON.stringify(config.toConfig(), null, 2));
 };

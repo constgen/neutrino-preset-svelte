@@ -3,40 +3,22 @@ let path = require('path');
 let arrify = require('arrify');
 let deepmerge = require('deepmerge');
 
-module.exports = function (neutrino, options = {}) {
+module.exports = function (neutrino, settings = {}) {
 	const NODE_MODULES = path.resolve(__dirname, '../node_modules');
 	let config = neutrino.config;
-	let targets = options.targets || {};
+	let targets = settings.targets || {};
 	let compileRule = config.module.rule('compile');
 	let compileRuleExtensions = arrify(compileRule.get('test'));
-
-	if (!targets.browsers) {
-		targets.browsers = [
-			'last 3 chrome versions',
-			'last 3 firefox versions',
-			'last 3 edge versions',
-			'last 3 opera versions',
-			'last 3 safari versions',
-			'last 1 ie version',
-			'last 1 ie_mob version',
-			'last 1 blackberry version',
-			'last 3 and_chr versions',
-			'last 3 and_ff versions',
-			'last 3 op_mob versions',
-			'last 2 op_mini versions',
-			'ios >= 8',
-			'android >= 4'
-		];
-	}
+	let linkedMode = !path.relative(process.cwd(), require.resolve('babel-loader')).startsWith('node_modules');
 
 	compileRule
 		.test(compileRuleExtensions.concat(/\.js$/))
 		.include
-			.merge(options.include || [])
+			.merge(settings.include || [])
 			.end()
 		.exclude
 			.add(NODE_MODULES)
-			.merge(options.exclude || [])
+			.merge(settings.exclude || [])
 			.end()
 		.use('babel')
 			.loader(require.resolve('babel-loader'))
@@ -48,7 +30,8 @@ module.exports = function (neutrino, options = {}) {
 						modules: false,
 						useBuiltIns: true,
 						include: [],
-						exclude: [],
+
+						exclude: [linkedMode && 'transform-es2015-classes'].filter(Boolean),
 						targets
 					}]
 				],
