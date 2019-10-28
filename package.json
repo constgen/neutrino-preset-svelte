@@ -34,7 +34,7 @@
 		"@neutrinojs/env": "~8.3.0",
 		"@neutrinojs/hot": "~8.3.0",
 		"babel-polyfill": "6.26.0",
-		"core-js": "^2.5.0",
+		"core-js": "^3.3.5",
 		"deepmerge": "~2.2.1",
 		"arrify": "~1.0.1",
 		"opn": "~5.4.0",
