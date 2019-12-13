@@ -52,7 +52,7 @@
 		"ip": "~1.1.5"
 	},
 	"devDependencies": {
-		"neutrino": "8.3.0",
+		"neutrino": "9.0.0",
 		"@atomspace/eslint": "2.5.4"
 	},
 	"peerDependencies": {
