@@ -25,7 +25,7 @@
 		"svelte": "~3.12.1",
 		"neutrino-middleware-svelte-loader": "~5.0.0",
 		"@neutrinojs/chunk": "~8.3.0",
-		"@neutrinojs/clean": "~8.3.0",
+		"@neutrinojs/clean": "~9.0.0",
 		"@neutrinojs/copy": "~8.3.0",
 		"@neutrinojs/minify": "~8.3.0",
 		"@neutrinojs/style-loader": "~8.3.0",
