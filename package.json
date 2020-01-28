@@ -28,7 +28,7 @@
 		"@neutrinojs/clean": "~8.3.0",
 		"@neutrinojs/copy": "~8.3.0",
 		"@neutrinojs/minify": "~8.3.0",
-		"@neutrinojs/style-loader": "~8.3.0",
+		"@neutrinojs/style-loader": "~9.1.0",
 		"@neutrinojs/font-loader": "~8.3.0",
 		"@neutrinojs/image-loader": "~8.0.18",
 		"@neutrinojs/env": "~8.3.0",
