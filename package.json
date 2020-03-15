@@ -22,7 +22,7 @@
 		"lint": "neutrino lint --fix"
 	},
 	"dependencies": {
-		"svelte": "~3.12.1",
+		"svelte": "~3.20.0",
 		"neutrino-middleware-svelte-loader": "~5.0.0",
 		"@neutrinojs/chunk": "~8.3.0",
 		"@neutrinojs/clean": "~8.3.0",
